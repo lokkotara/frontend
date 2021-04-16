@@ -12,19 +12,19 @@
         <div class="form">
           <template id="connexion" v-if="this.onLogin == true">
             <label for="EmailOrUsername"> Email ou pseudo</label>
-            <input type="text" id="emailOrUsername" placeholder="Votre adresse mail ou votre pseudo">
+            <input type="text"  id="emailOrUsername" placeholder="Votre adresse mail ou votre pseudo">
             <label for="password"> Mot de passe</label>
             <input type="text" id="password" placeholder="Votre mot de passe">
             <input type="button" value="Se connecter">
           </template>
           <template id="inscription" v-else>
-            <label for="username"> Pseudonyme</label>
-            <input type="text" id="username" placeholder="Votre nom d'utilisateur">
+            <label for="username"> Pseudonyme </label>
+            <input type="text" v-model="username" id="username" placeholder="Votre nom d'utilisateur">
             <label for="email"> Adresse e-mail</label>
-            <input type="text" id="email" placeholder="Votre adresse mail">
+            <input type="text" v-model ="email" id="email" placeholder="Votre adresse mail">
             <label for="password"> Mot de passe</label>
-            <input type="text" id="password" placeholder="Votre mot de passe">
-            <input type="button" value="S'inscrire">
+            <input type="text" v-model="password" id="password" placeholder="Votre mot de passe">
+            <input type="button" @click="signup" value="S'inscrire">
           </template>
         </div>
       </div>
@@ -35,7 +35,11 @@
 export default {
   data() {
     return {
-      onLogin: false
+      onLogin: false,
+      username: "",
+      email: "",
+      password: "",
+      image: ""
     }
   },
   methods: {
@@ -44,6 +48,30 @@ export default {
     },
     showSignup() {
       return this.onLogin = false;
+    },
+    signup() {
+      let newUser = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+        image: "../assets/avatarDefault.png"
+      };
+      fetch("http://localhost:3000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        mode: "cors",
+        body: JSON.stringify(newUser)
+      })
+      .then (res => {
+        console.log("Statut : "+ res.status);
+        // sessionStorage.setItem('currentUser', JSON.stringify(body));
+        
+      })
+      .catch(e => {
+        console.error("erreur : " + e.name);
+    })
     }
   }
 }
