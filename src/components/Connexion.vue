@@ -11,15 +11,28 @@
     <div id="displayForm">
       <div class="form">
         <template id="connexion" v-if="this.onLogin == true">
-          <label for="EmailOrUsername"> Email ou pseudo</label>
+          <label for="username"> Pseudo</label>
           <input
             type="text"
-            id="emailOrUsername"
-            placeholder="Votre adresse mail ou votre pseudo"
+            v-model="username"
+            id="username"
+            placeholder="Votre pseudo"
+          />
+          <label for="email"> Adresse e-mail</label>
+          <input
+            type="text"
+            v-model="email"
+            id="email"
+            placeholder="Votre adresse mail"
           />
           <label for="password"> Mot de passe</label>
-          <input type="text" id="password" placeholder="Votre mot de passe" />
-          <input type="button" value="Se connecter" />
+          <input
+            v-model="password"
+            type="text"
+            id="password"
+            placeholder="Votre mot de passe"
+          />
+          <input type="button" @click="login" value="Se connecter" />
         </template>
         <template id="inscription" v-else>
           <label for="username"> Pseudonyme </label>
@@ -81,6 +94,24 @@ export default {
         .post("http://localhost:3000/api/auth/signup", newUser)
         .then((res) => {
           if (res.status === 201) {
+            this.$router.push("/feed");
+          }
+        })
+        .catch((e) => {
+          console.error("erreur : " + e);
+        });
+    },
+    async login() {
+      let User = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      };
+      await axios
+        .post("http://localhost:3000/api/auth/login", User)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
             this.$router.push("/feed");
           }
         })
