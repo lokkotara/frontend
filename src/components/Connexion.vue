@@ -1,37 +1,58 @@
 <template>
   <section class="rightPart">
-      <header>
-          <div @click="showSignup">
-            <p>Inscription</p>
-          </div>
-          <div @click="showLogin">
-            <p>Connexion</p>
-          </div>
-      </header>
-      <div id="displayForm">
-        <div class="form">
-          <template id="connexion" v-if="this.onLogin == true">
-            <label for="EmailOrUsername"> Email ou pseudo</label>
-            <input type="text"  id="emailOrUsername" placeholder="Votre adresse mail ou votre pseudo">
-            <label for="password"> Mot de passe</label>
-            <input type="text" id="password" placeholder="Votre mot de passe">
-            <input type="button" value="Se connecter">
-          </template>
-          <template id="inscription" v-else>
-            <label for="username"> Pseudonyme </label>
-            <input type="text" v-model="username" id="username" placeholder="Votre nom d'utilisateur">
-            <label for="email"> Adresse e-mail</label>
-            <input type="text" v-model ="email" id="email" placeholder="Votre adresse mail">
-            <label for="password"> Mot de passe</label>
-            <input type="text" v-model="password" id="password" placeholder="Votre mot de passe">
-            <input type="button" @click="signup" value="S'inscrire">
-          </template>
-        </div>
+    <header>
+      <div @click="showSignup">
+        <p>Inscription</p>
       </div>
-    </section>
+      <div @click="showLogin">
+        <p>Connexion</p>
+      </div>
+    </header>
+    <div id="displayForm">
+      <div class="form">
+        <template id="connexion" v-if="this.onLogin == true">
+          <label for="EmailOrUsername"> Email ou pseudo</label>
+          <input
+            type="text"
+            id="emailOrUsername"
+            placeholder="Votre adresse mail ou votre pseudo"
+          />
+          <label for="password"> Mot de passe</label>
+          <input type="text" id="password" placeholder="Votre mot de passe" />
+          <input type="button" value="Se connecter" />
+        </template>
+        <template id="inscription" v-else>
+          <label for="username"> Pseudonyme </label>
+          <input
+            type="text"
+            v-model="username"
+            id="username"
+            placeholder="Votre nom d'utilisateur"
+          />
+          <label for="email"> Adresse e-mail</label>
+          <input
+            type="text"
+            v-model="email"
+            id="email"
+            placeholder="Votre adresse mail"
+          />
+          <label for="password"> Mot de passe</label>
+          <input
+            type="text"
+            v-model="password"
+            id="password"
+            placeholder="Votre mot de passe"
+          />
+          <input type="submit" @click="signup" value="S'inscrire" />
+        </template>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -39,46 +60,40 @@ export default {
       username: "",
       email: "",
       password: "",
-      image: ""
-    }
+      image: "",
+    };
   },
   methods: {
     showLogin() {
-      return this.onLogin = true;
+      return (this.onLogin = true);
     },
     showSignup() {
-      return this.onLogin = false;
+      return (this.onLogin = false);
     },
-    signup() {
+    async signup() {
       let newUser = {
         username: this.username,
         email: this.email,
         password: this.password,
-        image: "../assets/avatarDefault.png"
+        image: "../assets/avatarDefault.png",
       };
-      fetch("http://localhost:3000/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        mode: "cors",
-        body: JSON.stringify(newUser)
-      })
-      .then (res => {
-        console.log("Statut : "+ res.status);
-        // sessionStorage.setItem('currentUser', JSON.stringify(body));
-        
-      })
-      .catch(e => {
-        console.error("erreur : " + e.name);
-    })
-    }
-  }
-}
+      await axios
+        .post("http://localhost:3000/api/auth/signup", newUser)
+        .then((res) => {
+          if (res.status === 201) {
+            this.$router.push("/feed");
+          }
+        })
+        .catch((e) => {
+          console.error("erreur : " + e);
+        });
+    },
+  },
+};
 </script>
 
 <style scope lang="scss">
-  .mainWrapper {
+.mainWrapper {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -88,7 +103,8 @@ export default {
   background-clip: border-box;
   background-size: cover;
 }
-.leftPart, .rightPart {
+.leftPart,
+.rightPart {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,12 +117,12 @@ export default {
   justify-content: space-around;
   img {
     width: 15rem;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     border-radius: 50%;
   }
 }
 
-@media screen and (min-width: 1024px){
+@media screen and (min-width: 1024px) {
   .rightPart {
     width: 120rem;
   }
@@ -115,14 +131,18 @@ export default {
   justify-content: center;
   header {
     display: flex;
-    
+
     width: 90%;
     max-width: 70rem;
     div {
       cursor: pointer;
       padding: 2rem;
       background-color: rgba(35, 49, 73, 0.972);
-      background-image: linear-gradient(315deg, #4f6791 0%, rgba(35, 49, 73, 0.972) 74%);
+      background-image: linear-gradient(
+        315deg,
+        #4f6791 0%,
+        rgba(35, 49, 73, 0.972) 74%
+      );
       display: flex;
       flex-direction: row;
       justify-content: space-around;

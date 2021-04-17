@@ -1,49 +1,33 @@
 <template>
-	<div id="app">
+  <div id="app">
     <div id="nav">
       <router-link to="/feed">Feed</router-link> |
       <router-link to="/profile">Profil</router-link> |
-      <router-link to="/">Se déconnecter</router-link> 
+      <router-link to="/">Se déconnecter</router-link>
     </div>
     <router-view />
   </div>
 </template>
 
 <style lang="scss">
-// #app {
-//   font-family: Avenir, Helvetica, Arial, sans-serif;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-//   text-align: center;
-//   color: #2c3e50;
-// }
-
-// #nav {
-//   padding: 30px;
-
-//   a {
-//     font-weight: bold;
-//     color: #2c3e50;
-
-//     &.router-link-exact-active {
-//       color: #42b983;
-//     }
-//   }
-// }
 /* Réglages généraux */
-@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700;800&family=Raleway:ital,wght@0,300;0,400;1,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700;800&family=Raleway:ital,wght@0,300;0,400;1,400&display=swap");
 :root {
   --Primary-Color: ;
   --Primary-Color-Alt: ;
   --Secondary-Color: #6b1108;
   --Dark-Color: #2d2c2c;
   --Light-Color: #f3e6e8;
-  --Gradient-Color: linear-gradient(275deg, var(--Primary-Color) 0%, var(--Primary-Color-Alt) 74%);
+  --Gradient-Color: linear-gradient(
+    275deg,
+    var(--Primary-Color) 0%,
+    var(--Primary-Color-Alt) 74%
+  );
   font-size: 10px;
 }
 
 body {
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
   background-color: white;
   color: var(--Dark-Color);
   height: 100%;
@@ -52,7 +36,7 @@ body {
 *,
 *::before,
 *::after {
-  box-sizing: inherit
+  box-sizing: inherit;
 }
 
 html,
@@ -93,12 +77,12 @@ a {
 
 ul,
 ol {
-  list-style: none
+  list-style: none;
 }
 
 button,
 input {
-  margin: 0
+  margin: 0;
 }
 
 p,
@@ -115,7 +99,7 @@ p {
 
 h1 {
   font-size: 3.5rem;
-  font-family: 'Karla', sans-serif;
+  font-family: "Karla", sans-serif;
   font-weight: 900;
   padding: 5rem 0 2rem;
 }

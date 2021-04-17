@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header/>
+    <Header />
     <main class="mainFeed">
       <h1>Fil d'actualité</h1>
       <article class="postArticle">
@@ -15,7 +15,12 @@
           </div>
         </header>
         <div class="content">
-          <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. A suscipit necessitatibus unde enim vel repellat doloremque dignissimos nobis omnis. Quas suscipit incidunt fuga maiores tenetur delectus possimus impedit? Enim, animi?</p>
+          <p>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. A suscipit
+            necessitatibus unde enim vel repellat doloremque dignissimos nobis
+            omnis. Quas suscipit incidunt fuga maiores tenetur delectus possimus
+            impedit? Enim, animi?
+          </p>
         </div>
         <footer>
           <div class="numbers">
@@ -23,8 +28,8 @@
             <span>3 commentaires</span>
           </div>
           <div class="commentLine">
-            <img src="../assets/femme_au_voile1618230036501.jpg" alt="">
-            <input type="text" placeholder="Votre commentaire...">
+            <img src="../assets/femme_au_voile1618230036501.jpg" alt="" />
+            <input type="text" placeholder="Votre commentaire..." />
             <span class="fas fa-chevron-right validate"></span>
           </div>
         </footer>
@@ -34,7 +39,7 @@
 </template>
 
 <script>
-import Header from '../components/Header.vue';
+import Header from "../components/Header.vue";
 export default {
   name: "Feed",
   components: {
@@ -47,10 +52,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .mainHeader {
+.mainHeader {
   width: 100%;
   background-color: rgba(35, 49, 73, 0.972);
-  background-image: linear-gradient(315deg, #4f6791 0%, rgba(35, 49, 73, 0.972) 74%);
+  background-image: linear-gradient(
+    315deg,
+    #4f6791 0%,
+    rgba(35, 49, 73, 0.972) 74%
+  );
   color: #fff2f2;
   display: flex;
   justify-content: space-around;
@@ -88,13 +97,17 @@ export default {
   width: max-content;
   padding: 0 2rem 2rem 1rem;
   color: #fff2f2;
-  background-image: linear-gradient(315deg, #4f6791 0%, rgba(35, 49, 73, 0.972) 74%);
+  background-image: linear-gradient(
+    315deg,
+    #4f6791 0%,
+    rgba(35, 49, 73, 0.972) 74%
+  );
 }
-nav ul{
+nav ul {
   display: flex;
   flex-direction: column;
 }
-.commentLine img{
+.commentLine img {
   width: 3rem;
   height: 3rem;
   margin: 0.5rem 1rem;
@@ -102,8 +115,8 @@ nav ul{
 }
 .postArticle {
   border-radius: 2rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   width: 90%;
   max-width: 80rem;
   margin-bottom: 3rem;
@@ -117,7 +130,11 @@ nav ul{
     border-radius: 2rem 2rem 0 0;
     display: flex;
     background-color: rgba(35, 49, 73, 0.972);
-    background-image: linear-gradient(315deg, #4f6791 0%, rgba(35, 49, 73, 0.972) 74%);
+    background-image: linear-gradient(
+      315deg,
+      #4f6791 0%,
+      rgba(35, 49, 73, 0.972) 74%
+    );
     color: #fff2f2;
     width: 100%;
     justify-content: space-between;
@@ -139,7 +156,7 @@ nav ul{
         font-size: 3rem;
         color: #d6bcbc;
         &:hover {
-          transition: 1s cubic-bezier(.53,.48,0,1);
+          transition: 1s cubic-bezier(0.53, 0.48, 0, 1);
           color: transparent;
           background-color: #861657;
           background-image: linear-gradient(326deg, #861657 0%, #ffa69e 74%);
@@ -159,9 +176,13 @@ nav ul{
     .numbers {
       display: flex;
       background-color: #d6bcbc;
-      background-image: linear-gradient(315deg, #4f6791 0%, rgba(35, 49, 73, 0.972) 74%);
+      background-image: linear-gradient(
+        315deg,
+        #4f6791 0%,
+        rgba(35, 49, 73, 0.972) 74%
+      );
       color: #fff2f2;
-      width: 100%; 
+      width: 100%;
       justify-content: space-between;
       align-items: center;
       padding: 0.5rem 1.5rem;
@@ -184,7 +205,11 @@ nav ul{
   flex: 1;
   border-radius: 0 0 2rem 2rem;
   .validate {
-    background-image: linear-gradient(315deg, #4f6791 0%, rgba(35, 49, 73, 0.972) 74%);
+    background-image: linear-gradient(
+      315deg,
+      #4f6791 0%,
+      rgba(35, 49, 73, 0.972) 74%
+    );
     color: #fff2f2;
     padding: 1rem;
     width: 3.75rem;

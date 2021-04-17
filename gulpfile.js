@@ -1,20 +1,20 @@
 "use strict";
-const ejs = require("gulp-ejs");
 const gulp = require("gulp");
 const sass = require("gulp-sass");
 const browserSync = require("browser-sync");
 
 function scss2css() {
-  return gulp.src("./www/scss/main.scss")
+  return gulp
+    .src("./www/scss/main.scss")
     .pipe(sass.sync().on("error", sass.logError))
     .pipe(gulp.dest("./www/"));
 }
 
-function autoUpdate(){
+function autoUpdate() {
   browserSync.init({
     server: {
-      baseDir : "./www"
-    }
+      baseDir: "./www",
+    },
   });
   gulp.watch("./www/scss/elements/*.scss", scss2css);
   gulp.watch("./www/scss/*.scss", scss2css);
