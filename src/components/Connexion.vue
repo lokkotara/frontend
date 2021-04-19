@@ -88,13 +88,13 @@ export default {
         username: this.username,
         email: this.email,
         password: this.password,
-        image: "../assets/avatarDefault.png",
+        image: "../assets/avatarDefault.jpg",
       };
       await axios
         .post("http://localhost:3000/api/auth/signup", newUser)
         .then((res) => {
           if (res.status === 201) {
-            this.$router.push("/feed");
+            this.login();
           }
         })
         .catch((e) => {
@@ -111,7 +111,7 @@ export default {
         .post("http://localhost:3000/api/auth/login", User)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
+            localStorage.setItem("user", JSON.stringify(res.data));
             this.$router.push("/feed");
           }
         })

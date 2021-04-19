@@ -11,8 +11,17 @@
 </template>
 
 <script>
+// import axios from "axios";
+// const user = JSON.parse(localStorage.getItem("user"));
 export default {
   name: "Header",
+  data() {
+    return {
+      id: "",
+      image: "",
+      username: "",
+    };
+  },
 };
 </script>
 
