@@ -3,24 +3,63 @@
     <img src="../assets/logoLong.png" class="logoLong" alt="" />
     <img src="../assets/logo.png" class="logoShort" alt="" />
     <div class="profileBtn">
-      <span>Lokkotara</span>
-      <img src="../assets/beau_gosse1617867815195.jpg" alt="" />
-      <span class="fas fa-sort-down"></span>
+      <span class="pseudo">{{ username }}</span>
+      <router-link to="/profile"
+        ><img src="../assets/beau_gosse1617867815195.jpg" alt=""
+      /></router-link>
+      <span class="fas fa-sort-down" @click="showDropDown"></span>
+      <div class="dropDown" v-if="(dd = false)">
+        <p>Voir mon profil</p>
+        <span class="fas fa-sign-out-alt">Se deconnecter</span>
+      </div>
     </div>
   </header>
 </template>
 
 <script>
-// import axios from "axios";
-// const user = JSON.parse(localStorage.getItem("user"));
+import axios from "axios";
+const user = JSON.parse(localStorage.getItem("user"));
+const userId = user.userId;
 export default {
   name: "Header",
   data() {
     return {
-      id: "",
+      id: userId,
       image: "",
       username: "",
+      dd: "",
     };
+  },
+  computed: {
+    comments: function () {
+      return this.allPosts;
+    },
+  },
+  methods: {
+    getUser() {
+      axios
+        .get("http://localhost:3000/api/auth/profil/" + this.id)
+        .then((res) => {
+          const currentUser = res.data;
+          console.log(currentUser);
+          this.username = currentUser.username;
+          this.image = currentUser.image;
+        })
+        .catch((error) => {
+          console.log({ error });
+        });
+    },
+    showDropDown() {
+      console.log(this.dd);
+      if (this.dd) {
+        this.dd = false;
+      } else {
+        this.dd = true;
+      }
+    },
+  },
+  mounted() {
+    this.getUser();
   },
 };
 </script>
@@ -50,9 +89,14 @@ export default {
   display: flex;
   align-items: center;
   padding: 0.5rem 1.5rem;
+  .pseudo {
+    font-size: 3rem;
+    font-family: "Karla", Arial, sans-serif;
+    font-weight: 800;
+  }
   img {
-    width: 5rem;
-    height: 5rem;
+    width: 7rem;
+    height: 7rem;
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
@@ -60,9 +104,16 @@ export default {
   }
   .fa-sort-down {
     font-size: 2.5rem;
-    margin-left: 1.5rem;
-    border-radius: 50%;
+    margin-left: 0.5rem;
+    border-radius: 5rem;
     text-align: center;
+    width: 5rem;
+    height: 3rem;
+    &:hover {
+      background-color: rgba(255, 241, 244, 0.6);
+      color: #29364e;
+      cursor: pointer;
+    }
   }
 }
 .dropDown {

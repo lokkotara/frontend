@@ -6,11 +6,11 @@
       <article class="postArticle" v-for="post in allPosts" :key="post.id">
         <header>
           <div class="infos">
+            <img :src="post.User.image" alt="" />
             <div class="subInfos">
-              <img src="../assets/femme_au_voile1618230036501.jpg" alt="" />
-              <span>Sarah / {{ post.idUser }}</span>
+              <span>{{ post.User.username }}</span>
+              <span class="date">{{ moment(post.createdAt).fromNow() }}</span>
             </div>
-            <span class="date">{{ moment(post.createdAt).fromNow() }}</span>
           </div>
           <div class="icons">
             <span class="fas fa-heart"></span>
@@ -27,6 +27,14 @@
             <span>{{ post.likes }} likes</span>
             <span>{{ post.comments }} commentaires</span>
           </div>
+          <span
+            class="postComments"
+            v-for="comment in allComments"
+            :key="comment.id"
+          >
+            <img :src="post.User.image" alt="" />
+            <p>{{ post.content }}</p>
+          </span>
           <div class="commentLine">
             <img src="../assets/beau_gosse1617867815195.jpg" alt="" />
             <input type="text" placeholder="Votre commentaire..." />
@@ -55,7 +63,13 @@ export default {
       userId: user.id,
       isAdmin: "",
       allPosts: [],
+      allComments: [],
     };
+  },
+  computed: {
+    comments: function () {
+      return this.allComments;
+    },
   },
   methods: {
     getAllPosts() {
@@ -63,10 +77,14 @@ export default {
         .get("http://localhost:3000/api/feed/")
         .then((res) => {
           this.allPosts = res.data;
+          this.getComments(res);
         })
         .catch((error) => {
           console.log({ error });
         });
+    },
+    getComments(res) {
+      this.allComments = res.data.User;
     },
   },
   mounted() {
@@ -78,14 +96,20 @@ export default {
 <style scoped lang="scss">
 .commentLine img,
 .infos img {
-  width: 3rem;
-  height: 3rem;
   object-fit: cover;
-  margin: 0.5rem 1rem;
+  margin: 0 1rem 0 0;
   border-radius: 50%;
 }
+.commentLine img {
+  width: 4rem;
+  height: 4rem;
+}
+.infos img {
+  width: 6rem;
+  height: 6rem;
+}
 .date {
-  margin: 0 1rem;
+  font-style: italic;
 }
 .postArticle {
   border-radius: 2rem;
@@ -116,13 +140,13 @@ export default {
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
+    padding: 1rem;
     .infos {
       display: flex;
-      flex-direction: column;
       .subInfos {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
       }
     }
     .icons {
