@@ -88,7 +88,7 @@ export default {
         username: this.username,
         email: this.email,
         password: this.password,
-        image: "../assets/avatarDefault.jpg",
+        image: "@/assets/avatarDefault.jpg",
       };
       await axios
         .post("http://localhost:3000/api/auth/signup", newUser)

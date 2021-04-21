@@ -1,12 +1,14 @@
 <template>
   <header class="mainHeader">
-    <img src="../assets/logoLong.png" class="logoLong" alt="" />
-    <img src="../assets/logo.png" class="logoShort" alt="" />
+    <router-link to="/feed"
+      ><img src="../assets/logoLong.png" class="logoLong" alt="" />
+      <img src="../assets/logo.png" class="logoShort" alt="" />
+    </router-link>
     <div class="profileBtn">
-      <span class="pseudo">{{ username }}</span>
+      <span class="pseudo">{{ currentUsername }}</span>
       <router-link to="/profile"
-        ><img src="../assets/beau_gosse1617867815195.jpg" alt=""
-      /></router-link>
+        ><img :src="image" alt="photo de profil" />
+      </router-link>
       <span class="fas fa-sort-down" @click="showDropDown"></span>
       <div class="dropDown" v-if="(dd = false)">
         <p>Voir mon profil</p>
@@ -31,17 +33,22 @@ export default {
     };
   },
   computed: {
-    comments: function () {
-      return this.allPosts;
+    currentUsername: function () {
+      return this.username;
     },
   },
   methods: {
     getUser() {
+      let token = user.token;
+      let config = {
+        headers: {
+          authorization: "Bearer: " + token,
+        },
+      };
       axios
-        .get("http://localhost:3000/api/auth/profil/" + this.id)
+        .get("http://localhost:3000/api/auth/profil/" + this.id, config)
         .then((res) => {
           const currentUser = res.data;
-          console.log(currentUser);
           this.username = currentUser.username;
           this.image = currentUser.image;
         })
@@ -58,7 +65,7 @@ export default {
       }
     },
   },
-  mounted() {
+  beforeMount() {
     this.getUser();
   },
 };
@@ -79,7 +86,7 @@ export default {
   align-items: center;
   padding: 2rem 0;
   img {
-    height: 5rem;
+    height: 7rem;
   }
 }
 .logoLong {

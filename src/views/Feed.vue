@@ -49,6 +49,7 @@
 <script>
 import Header from "../components/Header.vue";
 const moment = require("moment");
+moment.locale("fr");
 import axios from "axios";
 export default {
   name: "Feed",
@@ -59,7 +60,7 @@ export default {
     let user = JSON.parse(localStorage.getItem("user"));
     return {
       moment: moment,
-      token: "",
+      token: user.token,
       userId: user.id,
       isAdmin: "",
       allPosts: [],
@@ -73,8 +74,13 @@ export default {
   },
   methods: {
     getAllPosts() {
+      let config = {
+        headers: {
+          authorization: "Bearer: " + this.token,
+        },
+      };
       axios
-        .get("http://localhost:3000/api/feed/")
+        .get("http://localhost:3000/api/feed/", config)
         .then((res) => {
           this.allPosts = res.data;
           this.getComments(res);
