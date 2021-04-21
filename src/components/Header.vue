@@ -9,7 +9,9 @@
       <router-link to="/profile"
         ><img :src="image" alt="photo de profil" />
       </router-link>
-      <span class="fas fa-sort-down" @click="showDropDown"></span>
+      <router-link to="/"
+        ><span class="fas fa-sort-down" @click="showDropDown"></span>
+      </router-link>
       <div class="dropDown" v-if="(dd = false)">
         <p>Voir mon profil</p>
         <span class="fas fa-sign-out-alt">Se deconnecter</span>
