@@ -13,7 +13,7 @@
             </div>
           </div>
           <div class="icons">
-            <span class="fas fa-heart"></span>
+            <span class="fas fa-heart" @click="likePost(post.id)"></span>
             <span class="fas fa-ellipsis-h"></span>
           </div>
         </header>
@@ -27,13 +27,15 @@
             <span>{{ post.likes }} likes</span>
             <span>{{ post.comments }} commentaires</span>
           </div>
+          <span>{{ post.Comments }}</span>
+          <span>{{ essai }}</span>
           <span
             class="postComments"
             v-for="comment in allComments"
             :key="comment.id"
           >
             <img :src="post.User.image" alt="" />
-            <p>{{ post.content }}</p>
+            <p>{{ comment.id }}</p>
           </span>
           <div class="commentLine">
             <img src="../assets/beau_gosse1617867815195.jpg" alt="" />
@@ -67,12 +69,30 @@ export default {
       allComments: [],
     };
   },
-  computed: {
-    comments: function () {
-      return this.allComments;
-    },
-  },
   methods: {
+    likePost(id) {
+      let config = {
+        headers: {
+          authorization: "Bearer: " + this.token,
+        },
+      };
+      axios
+        .post(
+          "http://localhost:3000/api/feed/" + id + "/like",
+          {
+            likes: 1,
+          },
+          config
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            console.log("Vote pris en compte !");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     getAllPosts() {
       let config = {
         headers: {
@@ -83,14 +103,22 @@ export default {
         .get("http://localhost:3000/api/feed/", config)
         .then((res) => {
           this.allPosts = res.data;
-          this.getComments(res);
+          console.log(this.allPosts);
+          let comment = Object.assign({}, this.allPosts.Comments);
+          this.allComments = comment;
         })
         .catch((error) => {
           console.log({ error });
         });
     },
-    getComments(res) {
-      this.allComments = res.data.User;
+    getAllComments() {
+      let comments = {
+        get: function (post, comment) {
+          return comment in post;
+        },
+      };
+      let com = new Proxy({}, comments);
+      this.allComments = com;
     },
   },
   mounted() {

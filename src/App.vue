@@ -13,11 +13,12 @@
 /* Réglages généraux */
 @import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700;800&family=Raleway:ital,wght@0,300;0,400;1,400&display=swap");
 :root {
-  --Primary-Color: ;
-  --Primary-Color-Alt: ;
-  --Secondary-Color: #6b1108;
+  --Primary-Color: rgb(79, 103, 145);
+  --Primary-Color-Alt: rgb(41, 54, 78);
+  --Secondary-Color: rgb(187, 58, 127);
+  --Secondary-Color-Alt: #6b1108;
   --Dark-Color: #2d2c2c;
-  --Light-Color: #f3e6e8;
+  --Light-Color: rgb(255, 241, 244);
   --Gradient-Color: linear-gradient(
     275deg,
     var(--Primary-Color) 0%,

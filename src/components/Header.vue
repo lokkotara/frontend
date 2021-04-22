@@ -5,16 +5,16 @@
       <img src="../assets/logo.png" class="logoShort" alt="" />
     </router-link>
     <div class="profileBtn">
-      <span class="pseudo">{{ currentUsername }}</span>
-      <router-link to="/profile"
-        ><img :src="image" alt="photo de profil" />
-      </router-link>
-      <router-link to="/"
-        ><span class="fas fa-sort-down" @click="showDropDown"></span>
-      </router-link>
-      <div class="dropDown" v-if="(dd = false)">
-        <p>Voir mon profil</p>
-        <span class="fas fa-sign-out-alt">Se deconnecter</span>
+      <span class="pseudo">{{ username }}</span>
+      <img :src="image" alt="photo de profil" />
+      <span class="fas fa-sort-down" @click="toggle = !toggle"></span>
+      <div class="dropDown" v-show="toggle">
+        <router-link to="/profile"><p>Accéder à mon profil</p> </router-link>
+        <router-link to="/"
+          ><span class="fas fa-sign-out-alt" @click="logout"
+            >Se deconnecter</span
+          >
+        </router-link>
       </div>
     </div>
   </header>
@@ -22,25 +22,33 @@
 
 <script>
 import axios from "axios";
-const user = JSON.parse(localStorage.getItem("user"));
-const userId = user.userId;
 export default {
   name: "Header",
   data() {
     return {
-      id: userId,
+      user: [],
       image: "",
       username: "",
-      dd: "",
+      toggle: false,
     };
   },
   computed: {
+    currentUser: function () {
+      return this.user;
+    },
+    userId: function () {
+      let userId = this.user.userId;
+      console.log(userId);
+      return userId;
+    },
     currentUsername: function () {
-      return this.username;
+      return this.user.username;
     },
   },
   methods: {
     getUser() {
+      let user = JSON.parse(localStorage.getItem("user"));
+      this.user = user;
       let token = user.token;
       let config = {
         headers: {
@@ -48,7 +56,7 @@ export default {
         },
       };
       axios
-        .get("http://localhost:3000/api/auth/profil/" + this.id, config)
+        .get("http://localhost:3000/api/auth/profil/" + user.userId, config)
         .then((res) => {
           const currentUser = res.data;
           this.username = currentUser.username;
@@ -58,13 +66,8 @@ export default {
           console.log({ error });
         });
     },
-    showDropDown() {
-      console.log(this.dd);
-      if (this.dd) {
-        this.dd = false;
-      } else {
-        this.dd = true;
-      }
+    logout() {
+      localStorage.clear();
     },
   },
   beforeMount() {
@@ -97,6 +100,7 @@ export default {
 .profileBtn {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   padding: 0.5rem 1.5rem;
   .pseudo {
     font-size: 3rem;
@@ -126,12 +130,14 @@ export default {
   }
 }
 .dropDown {
+  position: absolute;
+  top: 12rem;
   margin-left: auto;
   display: flex;
   text-align: center;
   flex-direction: column;
   justify-content: center;
-  width: max-content;
+  width: inherit;
   padding: 0 2rem 2rem 1rem;
   color: #fff2f2;
   background-image: linear-gradient(
