@@ -27,8 +27,13 @@
             <span>{{ post.likes }} likes</span>
             <span>{{ post.comments }} commentaires</span>
           </div>
-          <span>{{ post.Comments }}</span>
-          <span>{{ essai }}</span>
+          <div
+            class="comment"
+            v-for="comment in post.Comments"
+            :key="comment.id"
+          >
+            {{ moment(comment.createdAt).fromNow() }} : {{ comment.content }}
+          </div>
           <span
             class="postComments"
             v-for="comment in allComments"
@@ -59,11 +64,10 @@ export default {
     Header,
   },
   data() {
-    let user = JSON.parse(localStorage.getItem("user"));
     return {
       moment: moment,
-      token: user.token,
-      userId: user.id,
+      token: "",
+      userId: "",
       isAdmin: "",
       allPosts: [],
       allComments: [],
@@ -94,6 +98,10 @@ export default {
         });
     },
     getAllPosts() {
+      let user = JSON.parse(localStorage.getItem("user"));
+      this.token = user.token;
+      this.userId = user.userId;
+      this.isAdmin = user.isAdmin;
       let config = {
         headers: {
           authorization: "Bearer: " + this.token,
@@ -103,25 +111,13 @@ export default {
         .get("http://localhost:3000/api/feed/", config)
         .then((res) => {
           this.allPosts = res.data;
-          console.log(this.allPosts);
-          let comment = Object.assign({}, this.allPosts.Comments);
-          this.allComments = comment;
         })
         .catch((error) => {
-          console.log({ error });
+          console.error({ error });
         });
     },
-    getAllComments() {
-      let comments = {
-        get: function (post, comment) {
-          return comment in post;
-        },
-      };
-      let com = new Proxy({}, comments);
-      this.allComments = com;
-    },
   },
-  mounted() {
+  beforeMount() {
     this.getAllPosts();
   },
 };
@@ -225,6 +221,11 @@ export default {
       justify-content: space-between;
       align-items: center;
       padding: 0.5rem 1.5rem;
+    }
+    .comment {
+      padding: 0.5rem 1.5rem;
+      background-color: #fff2f2;
+      font-size: 1.6rem;
     }
   }
 }

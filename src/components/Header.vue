@@ -32,31 +32,18 @@ export default {
       toggle: false,
     };
   },
-  computed: {
-    currentUser: function () {
-      return this.user;
-    },
-    userId: function () {
-      let userId = this.user.userId;
-      console.log(userId);
-      return userId;
-    },
-    currentUsername: function () {
-      return this.user.username;
-    },
-  },
   methods: {
     getUser() {
-      let user = JSON.parse(localStorage.getItem("user"));
-      this.user = user;
-      let token = user.token;
+      this.user = JSON.parse(localStorage.getItem("user"));
+      let token = this.user.token;
+      let userId = this.user.userId;
       let config = {
         headers: {
           authorization: "Bearer: " + token,
         },
       };
       axios
-        .get("http://localhost:3000/api/auth/profil/" + user.userId, config)
+        .get("http://localhost:3000/api/auth/profil/" + userId, config)
         .then((res) => {
           const currentUser = res.data;
           this.username = currentUser.username;
