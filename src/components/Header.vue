@@ -43,7 +43,7 @@ export default {
         },
       };
       axios
-        .get("http://localhost:3000/api/auth/profil/" + userId, config)
+        .get(`http://localhost:3000/api/auth/profil/${userId}`, config)
         .then((res) => {
           const currentUser = res.data;
           this.username = currentUser.username;

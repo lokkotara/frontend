@@ -22,8 +22,6 @@ import Header from "../components/Header.vue";
 import axios from "axios";
 const moment = require("moment");
 moment.locale("fr");
-const user = JSON.parse(localStorage.getItem("user"));
-const userId = user.userId;
 export default {
   name: "Profil",
   components: {
@@ -32,7 +30,10 @@ export default {
   data() {
     return {
       moment: moment,
-      id: userId,
+      token: "",
+      userId: "",
+      isAdmin: "",
+      id: "",
       image: "",
       username: "",
       email: "",
@@ -43,14 +44,17 @@ export default {
   },
   methods: {
     getProfileUser() {
-      let token = user.token;
+      let user = JSON.parse(localStorage.getItem("user"));
+      this.token = user.token;
+      this.userId = user.userId;
+      this.isAdmin = user.isAdmin;
       let config = {
         headers: {
-          authorization: "Bearer: " + token,
+          authorization: `Bearer: ${this.token}`,
         },
       };
       axios
-        .get("http://localhost:3000/api/auth/profil/" + this.id, config)
+        .get(`http://localhost:3000/api/auth/profil/${this.id}`, config)
         .then((res) => {
           this.infoProfile = res.data;
         })

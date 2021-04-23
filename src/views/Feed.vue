@@ -23,16 +23,18 @@
           </p>
         </div>
         <footer>
-          <div class="numbers">
+          <div class="numbers" @click="toggle = !toggle">
             <span>{{ post.likes }} likes</span>
             <span>{{ post.comments }} commentaires</span>
           </div>
-          <div
-            class="comment"
-            v-for="comment in post.Comments"
-            :key="comment.id"
-          >
-            {{ moment(comment.createdAt).fromNow() }} : {{ comment.content }}
+          <div v-show="toggle">
+            <div
+              class="comment"
+              v-for="comment in post.Comments"
+              :key="comment.id"
+            >
+              {{ moment(comment.createdAt).fromNow() }} : {{ comment.content }}
+            </div>
           </div>
           <span
             class="postComments"
@@ -71,6 +73,7 @@ export default {
       isAdmin: "",
       allPosts: [],
       allComments: [],
+      toggle: false,
     };
   },
   methods: {
@@ -82,7 +85,7 @@ export default {
       };
       axios
         .post(
-          "http://localhost:3000/api/feed/" + id + "/like",
+          `http://localhost:3000/api/feed/${id}/like`,
           {
             likes: 1,
           },
@@ -209,6 +212,7 @@ export default {
   footer {
     width: 100%;
     .numbers {
+      cursor: pointer;
       display: flex;
       background-color: #d6bcbc;
       background-image: linear-gradient(
