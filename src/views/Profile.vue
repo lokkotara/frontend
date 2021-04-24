@@ -3,7 +3,7 @@
     <Header />
     <main class="mainProfile">
       <div class="profile">
-        <img :src="infoProfile.image" alt="" class="imgProfile" />
+        <img :src="image" alt="" class="imgProfile" />
         <p>Pseudo : {{ infoProfile.username }}</p>
         <p>E-mail : {{ infoProfile.email }}</p>
         <p>Mot de passe : {{ infoProfile.password }}</p>
@@ -19,6 +19,7 @@
 
 <script>
 import Header from "../components/Header.vue";
+import avatar from "../assets/avatarDefault.png";
 import axios from "axios";
 const moment = require("moment");
 moment.locale("fr");
@@ -35,7 +36,7 @@ export default {
       userId: "",
       isAdmin: "",
       id: "",
-      image: "",
+      image: avatar,
       username: "",
       email: "",
       password: "",
@@ -57,6 +58,9 @@ export default {
         .get(`http://localhost:3000/api/auth/profil/${userId}`, config)
         .then((res) => {
           this.infoProfile = res.data;
+          if (this.infoProfile.image !== null) {
+            this.image = this.infoProfile.image;
+          }
         })
         .catch((error) => {
           console.log({ error });

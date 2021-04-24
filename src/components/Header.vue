@@ -9,7 +9,6 @@
       <img :src="image" alt="photo de profil" />
       <span class="fas fa-sort-down" @click="toggle = !toggle"></span>
       <div class="dropDown" v-show="toggle">
-        <img :src="test" alt="" />
         <router-link to="/profile"><p>Accéder à mon profil</p> </router-link>
         <router-link to="/"
           ><span class="fas fa-sign-out-alt" @click="logout"
@@ -23,6 +22,7 @@
 
 <script>
 import axios from "axios";
+import avatar from "../assets/avatarDefault.png";
 export default {
   name: "Header",
   data() {
@@ -32,11 +32,6 @@ export default {
       username: "",
       toggle: false,
     };
-  },
-  computed: {
-    test: function () {
-      return "../assets/avatarDefault.png";
-    },
   },
   methods: {
     getUser() {
@@ -52,13 +47,11 @@ export default {
         .get(`http://localhost:3000/api/auth/profil/${userId}`, config)
         .then((res) => {
           let currentUser = res.data;
-          let avatarDefault = "../assets/avatarDefault.png";
-          console.log(currentUser.image);
           this.username = currentUser.username;
           if (currentUser.image !== null) {
             this.image = currentUser.image;
           } else {
-            this.image = avatarDefault;
+            this.image = avatar;
           }
         })
         .catch((error) => {

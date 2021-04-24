@@ -6,7 +6,10 @@
       <article class="postArticle" v-for="post in allPosts" :key="post.id">
         <header>
           <div class="infos">
-            <img :src="post.User.image" alt="" />
+            <img
+              :src="post.User.image === null ? avatar : post.User.image"
+              alt=""
+            />
             <div class="subInfos">
               <span>{{ post.User.username }}</span>
               <span class="date">{{ moment(post.createdAt).fromNow() }}</span>
@@ -37,7 +40,7 @@
             </div>
           </div>
           <div class="commentLine">
-            <img :src="post.User.image" alt="" />
+            <img :src="avatar" alt="" />
             <input type="text" placeholder="Votre commentaire..." />
             <span class="fas fa-chevron-right validate"></span>
           </div>
@@ -49,6 +52,7 @@
 
 <script>
 import Header from "../components/Header.vue";
+import avatar from "../assets/avatarDefault.png";
 const moment = require("moment");
 moment.locale("fr");
 import axios from "axios";
@@ -64,6 +68,8 @@ export default {
       commentsContainer: null,
       userId: "",
       isAdmin: "",
+      avatar: avatar,
+      image: "",
       allPosts: [],
       allComments: [],
       isDisplay: false,

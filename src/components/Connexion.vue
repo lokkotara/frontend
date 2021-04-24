@@ -2,10 +2,10 @@
   <section class="rightPart">
     <header>
       <div @click="showSignup">
-        <p>Inscription</p>
+        <h3>Inscription</h3>
       </div>
       <div @click="showLogin">
-        <p>Connexion</p>
+        <h3>Connexion</h3>
       </div>
     </header>
     <div id="displayForm">
@@ -77,7 +77,6 @@
 
 <script>
 import axios from "axios";
-
 export default {
   data() {
     return {
@@ -176,7 +175,7 @@ export default {
       flex-direction: row;
       justify-content: space-around;
       width: 100%;
-      p {
+      h3 {
         font-size: 2.5rem;
       }
     }
