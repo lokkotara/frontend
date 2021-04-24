@@ -39,11 +39,7 @@
               {{ moment(comment.createdAt).fromNow() }} : {{ comment.content }}
             </div>
           </div>
-          <div class="commentLine">
-            <img :src="avatar" alt="" />
-            <input type="text" placeholder="Votre commentaire..." />
-            <span class="fas fa-chevron-right validate"></span>
-          </div>
+          <Comments />
         </footer>
       </article>
     </main>
@@ -51,6 +47,7 @@
 </template>
 
 <script>
+import Comments from "../components/Comments.vue";
 import Header from "../components/Header.vue";
 import avatar from "../assets/avatarDefault.png";
 const moment = require("moment");
@@ -60,6 +57,7 @@ export default {
   name: "Feed",
   components: {
     Header,
+    Comments,
   },
   data() {
     return {
@@ -244,33 +242,5 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.commentLine {
-  display: flex;
-  background-color: #fff1f4;
-  width: 100%;
-  align-items: center;
-  padding: 0.5rem 1.5rem;
-  justify-content: space-between;
-  flex: 1;
-  border-radius: 0 0 2rem 2rem;
-  .validate {
-    background-image: linear-gradient(
-      315deg,
-      #4f6791 0%,
-      rgba(35, 49, 73, 0.972) 74%
-    );
-    color: #fff2f2;
-    padding: 1rem;
-    width: 3.75rem;
-    text-align: center;
-    border-radius: 50%;
-    margin: 0.5rem 1rem;
-    font-size: 2rem;
-  }
-  input {
-    flex: 1;
-    border: 1px solid lightgrey;
-  }
 }
 </style>

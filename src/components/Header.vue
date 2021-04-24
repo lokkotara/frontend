@@ -2,7 +2,7 @@
   <header class="mainHeader">
     <router-link to="/feed"
       ><img src="@/assets/logoLong-alt.png" class="logoLong" alt="" />
-      <img src="@/assets/logo-alt.png" class="logoShort" alt="" />
+      <img src="@/assets/logo.png" class="logoShort" alt="" />
     </router-link>
     <div class="profileBtn">
       <span class="pseudo">{{ username }}</span>

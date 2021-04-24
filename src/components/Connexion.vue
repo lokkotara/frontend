@@ -11,12 +11,12 @@
     <div id="displayForm">
       <div class="form">
         <template id="connexion" v-if="this.onLogin == true">
-          <label for="username"> Pseudo</label>
+          <label for="username"> Pseudonyme</label>
           <input
             type="text"
             v-model="username"
             id="username"
-            placeholder="Votre pseudo"
+            placeholder="Votre nom d'utilisateur"
           />
           <label for="email"> Adresse e-mail</label>
           <input
