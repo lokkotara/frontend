@@ -23,11 +23,11 @@
           </p>
         </div>
         <footer>
-          <div class="numbers" @click="toggle = !toggle">
+          <div class="numbers" @click="toggle, (commentsContainer = post.id)">
             <span>{{ post.likes }} likes</span>
             <span>{{ post.comments }} commentaires</span>
           </div>
-          <div v-show="toggle">
+          <div v-if="commentsContainer == post.id">
             <div
               class="comment"
               v-for="comment in post.Comments"
@@ -36,16 +36,8 @@
               {{ moment(comment.createdAt).fromNow() }} : {{ comment.content }}
             </div>
           </div>
-          <span
-            class="postComments"
-            v-for="comment in allComments"
-            :key="comment.id"
-          >
-            <img :src="post.User.image" alt="" />
-            <p>{{ comment.id }}</p>
-          </span>
           <div class="commentLine">
-            <img src="../assets/beau_gosse1617867815195.jpg" alt="" />
+            <img :src="post.User.image" alt="" />
             <input type="text" placeholder="Votre commentaire..." />
             <span class="fas fa-chevron-right validate"></span>
           </div>
@@ -69,14 +61,22 @@ export default {
     return {
       moment: moment,
       token: "",
+      commentsContainer: null,
       userId: "",
       isAdmin: "",
       allPosts: [],
       allComments: [],
-      toggle: false,
+      isDisplay: false,
     };
   },
   methods: {
+    toggle() {
+      if (this.isDisplay) {
+        this.isDisplay = false;
+      } else {
+        this.isDisplay = true;
+      }
+    },
     likePost(id) {
       let config = {
         headers: {

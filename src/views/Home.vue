@@ -1,6 +1,6 @@
 <template>
   <div class="mainWrapper">
-    <Identity msg="Réseau social d'entreprise" />
+    <Identity msg="Le réseau qui connecte les collègues" />
     <Connexion />
   </div>
 </template>

@@ -32,7 +32,13 @@
             id="password"
             placeholder="Votre mot de passe"
           />
-          <input type="button" @click="login" value="Se connecter" />
+
+          <input
+            id="submitBtn"
+            type="button"
+            @click="login"
+            value="Se connecter"
+          />
         </template>
         <template id="inscription" v-else>
           <label for="username"> Pseudonyme </label>
@@ -41,6 +47,7 @@
             v-model="username"
             id="username"
             placeholder="Votre nom d'utilisateur"
+            label="Pseudonyme"
           />
           <label for="email"> Adresse e-mail</label>
           <input
@@ -56,7 +63,12 @@
             id="password"
             placeholder="Votre mot de passe"
           />
-          <input type="submit" @click="signup" value="S'inscrire" />
+          <input
+            id="submitBtn"
+            type="submit"
+            @click="signup"
+            value="S'inscrire"
+          />
         </template>
       </div>
     </div>
@@ -88,7 +100,6 @@ export default {
         username: this.username,
         email: this.email,
         password: this.password,
-        image: "@/assets/avatarDefault.jpg",
       };
       await axios
         .post("http://localhost:3000/api/auth/signup", newUser)
@@ -144,15 +155,6 @@ export default {
   color: var(--Light-Color);
 }
 
-.leftPart {
-  justify-content: space-around;
-  img {
-    width: 15rem;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    border-radius: 50%;
-  }
-}
-
 @media screen and (min-width: 1024px) {
   .rightPart {
     width: 120rem;
@@ -162,29 +164,28 @@ export default {
   justify-content: center;
   header {
     display: flex;
-
+    font-weight: 800;
     width: 90%;
     max-width: 70rem;
     div {
       cursor: pointer;
       padding: 2rem;
       background-color: rgba(35, 49, 73, 0.972);
-      background-image: linear-gradient(
-        315deg,
-        #4f6791 0%,
-        rgba(35, 49, 73, 0.972) 74%
-      );
+      background-image: var(--Gradient-Color);
       display: flex;
       flex-direction: row;
       justify-content: space-around;
       width: 100%;
+      p {
+        font-size: 2.5rem;
+      }
     }
   }
   #displayForm {
     width: 90%;
     max-width: 70rem;
     .form {
-      background-color: #f3e6e8;
+      background-color: var(--Light-Color);
       border: var(--Dark-Color) 1px solid;
       width: 100%;
       padding: 2rem;
@@ -199,6 +200,12 @@ export default {
       }
       label {
         color: var(--Dark-Color);
+        font-weight: 800;
+        margin-left: 1rem;
+      }
+      #submitBtn {
+        font-weight: 700;
+        padding: 1rem 0;
       }
     }
   }

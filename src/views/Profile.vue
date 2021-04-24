@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       moment: moment,
+      user: [],
       token: "",
       userId: "",
       isAdmin: "",
@@ -44,17 +45,16 @@ export default {
   },
   methods: {
     getProfileUser() {
-      let user = JSON.parse(localStorage.getItem("user"));
-      this.token = user.token;
-      this.userId = user.userId;
-      this.isAdmin = user.isAdmin;
+      this.user = JSON.parse(localStorage.getItem("user"));
+      let token = this.user.token;
+      let userId = this.user.userId;
       let config = {
         headers: {
-          authorization: `Bearer: ${this.token}`,
+          authorization: `Bearer: ${token}`,
         },
       };
       axios
-        .get(`http://localhost:3000/api/auth/profil/${this.id}`, config)
+        .get(`http://localhost:3000/api/auth/profil/${userId}`, config)
         .then((res) => {
           this.infoProfile = res.data;
         })
@@ -63,7 +63,7 @@ export default {
         });
     },
   },
-  mounted() {
+  beforeMount() {
     this.getProfileUser();
   },
 };
@@ -95,3 +95,5 @@ export default {
   }
 }
 </style>
+
+function newFunction(token) { return `Bearer: ${token}`; }

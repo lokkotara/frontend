@@ -1,10 +1,5 @@
 <template>
   <div id="app">
-    <!-- <div id="nav">
-      <router-link to="/feed">Feed</router-link> |
-      <router-link to="/profile">Profil</router-link> |
-      <router-link to="/">Se déconnecter</router-link>
-    </div> -->
     <router-view />
   </div>
 </template>
@@ -13,16 +8,22 @@
 /* Réglages généraux */
 @import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700;800&family=Raleway:ital,wght@0,300;0,400;1,400&display=swap");
 :root {
-  --Primary-Color: rgb(79, 103, 145);
-  --Primary-Color-Alt: rgb(41, 54, 78);
-  --Secondary-Color: rgb(187, 58, 127);
-  --Secondary-Color-Alt: #6b1108;
+  --Primary-Color: #091f43;
+  --Primary-Color-Alt: #192947;
+  --Primary-Color-Ter: #394552;
+  --Secondary-Color: #ffd7d7;
+  --Secondary-Color-Alt: #d6646c;
   --Dark-Color: #2d2c2c;
   --Light-Color: rgb(255, 241, 244);
   --Gradient-Color: linear-gradient(
-    275deg,
+    35deg,
+    var(--Primary-Color) 20%,
+    var(--Primary-Color-Alt) 95%
+  );
+  --Gradient-Color-Alt: linear-gradient(
+    315deg,
     var(--Primary-Color) 0%,
-    var(--Primary-Color-Alt) 74%
+    var(--Primary-Color-ter) 74%
   );
   font-size: 10px;
 }
