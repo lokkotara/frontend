@@ -11,9 +11,11 @@
     <div id="displayForm">
       <div class="form">
         <template id="connexion" v-if="this.onLogin == true">
+          <span class="toSignUp">Pas encore de compte ?</span>
           <label for="username"> Pseudonyme</label>
           <input
             type="text"
+            @keyup.enter="login"
             v-model="username"
             id="username"
             placeholder="Votre nom d'utilisateur"
@@ -21,6 +23,7 @@
           <label for="email"> Adresse e-mail</label>
           <input
             type="text"
+            @keyup.enter="login"
             v-model="email"
             id="email"
             placeholder="Votre adresse mail"
@@ -28,6 +31,7 @@
           <label for="password"> Mot de passe</label>
           <input
             v-model="password"
+            @keyup.enter="login"
             type="text"
             id="password"
             placeholder="Votre mot de passe"
@@ -39,11 +43,13 @@
             @click="login"
             value="Se connecter"
           />
+          <span class="reset">Mot de passe oublié ?</span>
         </template>
         <template id="inscription" v-else>
           <label for="username"> Pseudonyme </label>
           <input
             type="text"
+            @keyup.enter="signup"
             v-model="username"
             id="username"
             placeholder="Votre nom d'utilisateur"
@@ -52,6 +58,7 @@
           <label for="email"> Adresse e-mail</label>
           <input
             type="text"
+            @keyup.enter="signup"
             v-model="email"
             id="email"
             placeholder="Votre adresse mail"
@@ -59,6 +66,7 @@
           <label for="password"> Mot de passe</label>
           <input
             type="text"
+            @keyup.enter="signup"
             v-model="password"
             id="password"
             placeholder="Votre mot de passe"
@@ -69,6 +77,7 @@
             @click="signup"
             value="S'inscrire"
           />
+          <span class="toLogin">Déjà un compte ?</span>
         </template>
       </div>
     </div>
@@ -80,7 +89,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      onLogin: false,
+      onLogin: true,
       username: "",
       email: "",
       password: "",
@@ -205,6 +214,21 @@ export default {
       #submitBtn {
         font-weight: 700;
         padding: 1rem 0;
+      }
+      .toLogin {
+        color: var(--Primary-Color);
+        text-align: center;
+        font-weight: 600;
+      }
+      .toSignUp {
+        color: var(--Primary-Color);
+        text-align: center;
+        font-weight: 600;
+      }
+      .reset {
+        color: var(--Secondary-Color-Alt);
+        text-align: center;
+        font-weight: 600;
       }
     }
   }

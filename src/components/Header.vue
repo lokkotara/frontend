@@ -7,7 +7,11 @@
     <div class="profileBtn">
       <span class="pseudo">{{ username }}</span>
       <img :src="image" alt="photo de profil" />
-      <span class="fas fa-sort-down" @click="toggle = !toggle"></span>
+      <span
+        aria-label="Accéder au menu"
+        class="fas fa-sort-down"
+        @click="toggle = !toggle"
+      ></span>
       <div class="dropDown" v-show="toggle">
         <router-link to="/profile"><p>Accéder à mon profil</p> </router-link>
         <router-link to="/"

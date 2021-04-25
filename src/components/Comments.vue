@@ -1,7 +1,12 @@
 <template>
   <div class="commentLine">
     <img :src="image" alt="Photo de profil" />
-    <input v-model="comment" type="text" placeholder="Votre commentaire..." />
+    <input
+      @keyup.enter="sendComment"
+      v-model="comment"
+      type="text"
+      placeholder="Votre commentaire..."
+    />
     <span @click="sendComment" class="fas fa-chevron-right validate"></span>
   </div>
 </template>
@@ -16,6 +21,12 @@ export default {
       image: "",
       comment: "",
     };
+  },
+  props: {
+    postId: {
+      type: Object,
+      required: true,
+    },
   },
   methods: {
     getCurrentUser() {
@@ -41,8 +52,32 @@ export default {
           console.log({ error });
         });
     },
-    sendComment() {
-      console.log(this.comment);
+    async sendComment() {
+      let user = JSON.parse(localStorage.getItem("user"));
+      this.token = user.token;
+      let newComment = {
+        content: this.comment,
+      };
+      let config = {
+        headers: {
+          authorization: "Bearer: " + this.token,
+        },
+      };
+      let id = this.postId.id;
+      await axios
+        .post(
+          `http://localhost:3000/api/feed/${id}/comment`,
+          newComment,
+          config
+        )
+        .then((res) => {
+          if (res.status === 201) {
+            console.log("Commentaire envoyé");
+          }
+        })
+        .catch((e) => {
+          console.error("erreur : " + e);
+        });
     },
   },
   mounted() {

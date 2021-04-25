@@ -4,10 +4,10 @@
     <main class="mainProfile">
       <div class="profile">
         <img :src="image" alt="" class="imgProfile" />
-        <p>Pseudo : {{ infoProfile.username }}</p>
-        <p>E-mail : {{ infoProfile.email }}</p>
-        <p>Mot de passe : {{ infoProfile.password }}</p>
-        <p>Membre depuis le {{ infoProfile.createdAt }}</p>
+        <p>Pseudo : {{ username }}</p>
+        <p>E-mail : {{ email }}</p>
+        <p>Mot de passe : {{ password }}</p>
+        <p>Devenu membre {{ moment(createdAt).fromNow() }}</p>
       </div>
       <div class="actions">
         <p>Modifier son profil</p>
@@ -41,7 +41,6 @@ export default {
       email: "",
       password: "",
       createdAt: "",
-      infoProfile: [],
     };
   },
   methods: {
@@ -57,9 +56,13 @@ export default {
       axios
         .get(`http://localhost:3000/api/auth/profil/${userId}`, config)
         .then((res) => {
-          this.infoProfile = res.data;
-          if (this.infoProfile.image !== null) {
-            this.image = this.infoProfile.image;
+          let data = res.data;
+          this.username = data.username;
+          this.email = data.email;
+          this.password = data.password;
+          this.createdAt = data.createdAt;
+          if (data.image !== null) {
+            this.image = data.image;
           }
         })
         .catch((error) => {

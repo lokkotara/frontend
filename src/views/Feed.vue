@@ -39,7 +39,7 @@
               {{ moment(comment.createdAt).fromNow() }} : {{ comment.content }}
             </div>
           </div>
-          <Comments />
+          <Comments :postId="post" />
         </footer>
       </article>
     </main>
@@ -72,6 +72,9 @@ export default {
       allComments: [],
       isDisplay: false,
     };
+  },
+  provide: {
+    postId: "5",
   },
   methods: {
     toggle() {
