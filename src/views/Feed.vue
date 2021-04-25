@@ -101,10 +101,11 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             console.log("Vote pris en compte !");
+            this.getAllPosts;
           }
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     },
     getAllPosts() {
@@ -127,13 +128,17 @@ export default {
         });
     },
   },
-  beforeMount() {
+  mounted() {
     this.getAllPosts();
   },
 };
 </script>
 
 <style scoped lang="scss">
+.mainFeed {
+  background-image: url(../assets/ville.jpg);
+  background-attachment: fixed;
+}
 .commentLine img,
 .infos img {
   object-fit: cover;
@@ -162,6 +167,8 @@ export default {
   flex-direction: column;
   align-items: center;
   .content {
+    width: 100%;
+    background-color: white;
     padding: 0 1.5rem;
     p {
       text-overflow: fade;

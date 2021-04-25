@@ -11,7 +11,6 @@
     <div id="displayForm">
       <div class="form">
         <template id="connexion" v-if="this.onLogin == true">
-          <span class="toSignUp">Pas encore de compte ?</span>
           <label for="username"> Pseudonyme</label>
           <input
             type="text"
@@ -20,6 +19,9 @@
             id="username"
             placeholder="Votre nom d'utilisateur"
           />
+          <span v-if="userError" class="errorMsg"
+            >Le nom d'utilisateur n'a pas le bon format</span
+          >
           <label for="email"> Adresse e-mail</label>
           <input
             type="text"
@@ -28,6 +30,9 @@
             id="email"
             placeholder="Votre adresse mail"
           />
+          <span v-if="emailError" class="errorMsg"
+            >L'adresse mail n'a pas le bon format</span
+          >
           <label for="password"> Mot de passe</label>
           <input
             v-model="password"
@@ -36,7 +41,9 @@
             id="password"
             placeholder="Votre mot de passe"
           />
-
+          <span v-if="passwordError" class="errorMsg"
+            >Le mot de passe n'a pas le bon format</span
+          >
           <input
             id="submitBtn"
             type="button"
@@ -55,6 +62,9 @@
             placeholder="Votre nom d'utilisateur"
             label="Pseudonyme"
           />
+          <span v-if="userError" class="errorMsg"
+            >Ne doit pas contenir de caractères spéciaux et être unique</span
+          >
           <label for="email"> Adresse e-mail</label>
           <input
             type="text"
@@ -63,6 +73,9 @@
             id="email"
             placeholder="Votre adresse mail"
           />
+          <span v-if="emailError" class="errorMsg"
+            >Doit respecter le format email et être unique</span
+          >
           <label for="password"> Mot de passe</label>
           <input
             type="text"
@@ -71,13 +84,16 @@
             id="password"
             placeholder="Votre mot de passe"
           />
+          <span v-if="passwordError" class="errorMsg"
+            >Doit contenir au moins 8 caractères, dont un chiffre, une majuscule
+            et une minuscule</span
+          >
           <input
             id="submitBtn"
             type="submit"
             @click="signup"
             value="S'inscrire"
           />
-          <span class="toLogin">Déjà un compte ?</span>
         </template>
       </div>
     </div>
@@ -200,6 +216,11 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
+      .errorMsg {
+        color: var(--Secondary-Color-Alt);
+        text-align: center;
+        font-style: italic;
+      }
       input {
         margin: 1rem 0;
         &::placeholder {
@@ -214,16 +235,6 @@ export default {
       #submitBtn {
         font-weight: 700;
         padding: 1rem 0;
-      }
-      .toLogin {
-        color: var(--Primary-Color);
-        text-align: center;
-        font-weight: 600;
-      }
-      .toSignUp {
-        color: var(--Primary-Color);
-        text-align: center;
-        font-weight: 600;
       }
       .reset {
         color: var(--Secondary-Color-Alt);
