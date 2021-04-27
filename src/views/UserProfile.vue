@@ -21,8 +21,8 @@
         </p>
       </div>
       <div class="actions">
-        <span class="fas fa-cog">Modifier son profil</span>
-        <span class="fas fa-trash-alt">Supprimer le compte</span>
+        <span>Ajouter ce profil à mes favoris</span>
+        <span class="fas fa-star"></span>
       </div>
     </main>
   </div>
@@ -35,7 +35,7 @@ import axios from "axios";
 const moment = require("moment");
 moment.locale("fr");
 export default {
-  name: "Profil",
+  name: "UserProfile",
   components: {
     Header,
   },
@@ -46,7 +46,7 @@ export default {
       token: "",
       userId: "",
       isAdmin: "",
-      id: "",
+      id: this.$route.params.id,
       image: avatar,
       username: "",
       email: "",
@@ -59,14 +59,14 @@ export default {
     getProfileUser() {
       this.user = JSON.parse(localStorage.getItem("user"));
       let token = this.user.token;
-      let userId = this.user.userId;
+      // let id = $route.params.id;
       let config = {
         headers: {
           authorization: `Bearer: ${token}`,
         },
       };
       axios
-        .get(`http://localhost:3000/api/auth/profil/${userId}`, config)
+        .get(`http://localhost:3000/api/auth/profil/${this.id}`, config)
         .then((res) => {
           let data = res.data;
           this.username = data.username;
@@ -145,8 +145,9 @@ export default {
     background-color: rgba(35, 49, 73, 0.972);
     background-image: var(--Gradient-Color-Alt);
     color: var(--Light-Color);
+    font-weight: 800;
     border-radius: 25px;
-    padding: 5rem;
+    padding: 2rem;
     border: 3px solid var(--Secondary-Color-Alt);
     display: flex;
     flex-direction: column;
@@ -156,8 +157,10 @@ export default {
     span {
       font-size: 2rem;
     }
-    .fas:before {
-      padding: 1rem;
+    .fas {
+      font-size: 7rem;
+      padding-top: 2rem;
+      color: #d6bcbc;
     }
   }
 }

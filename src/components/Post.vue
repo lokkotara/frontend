@@ -2,12 +2,22 @@
   <div class="container">
     <header>
       <div class="infos">
-        <img
-          :src="post.User.image === null ? avatar : post.User.image"
-          alt=""
-        />
+        <router-link
+          :to="{
+            name: 'UserProfile',
+            params: { id: post.User.id },
+          }"
+        >
+          <img
+            :src="post.User.image === null ? avatar : post.User.image"
+            alt=""
+          />
+        </router-link>
         <div class="subInfos">
-          <span>{{ post.User.username }} | {{ isLiked }}</span>
+          <span
+            >{{ post.User.username }} |
+            {{ date(post.createdAt).format("L") }}</span
+          >
           <span class="date">{{ moment(post.createdAt).fromNow() }}</span>
         </div>
       </div>
@@ -29,11 +39,21 @@
         <span>{{ comments.length }} commentaires</span>
       </div>
       <div v-if="isDisplay">
-        <div class="comment" v-for="comment in comments" :key="comment.id">
-          <span class="contentComment">{{ comment.content }}</span>
-          <span class="dateComment">{{
-            moment(comment.createdAt).fromNow()
-          }}</span>
+        <div
+          class="commentWrapper"
+          v-for="comment in comments"
+          :key="comment.id"
+        >
+          <div>
+            <img :src="avatar" alt="" />
+            <span class="comment">
+              <span class="dateComment"
+                ><span class="usernameComment">Florian</span>
+                {{ moment(comment.createdAt).fromNow() }}</span
+              >
+              <span class="contentComment">{{ comment.content }}</span>
+            </span>
+          </div>
         </div>
       </div>
     </footer>
@@ -42,7 +62,7 @@
 
 <script>
 import avatar from "../assets/avatarDefault.png";
-const moment = require("moment");
+let moment = require("moment");
 moment.locale("fr");
 import axios from "axios";
 export default {
@@ -59,6 +79,13 @@ export default {
       like: [],
       comments: [],
     };
+  },
+  computed: {
+    date: function () {
+      let moment = require("moment");
+      moment.locale("fr");
+      return moment;
+    },
   },
   props: {
     post: {
@@ -134,6 +161,29 @@ export default {
           console.error(error);
         });
     },
+    displayLiked() {
+      let user = JSON.parse(localStorage.getItem("user"));
+      this.token = user.token;
+      this.userId = user.userId;
+      let config = {
+        headers: {
+          authorization: "Bearer: " + this.token,
+        },
+      };
+      axios
+        .get(
+          `http://localhost:3000/api/feed/${this.post.id}/like/${this.userId}`,
+          config
+        )
+        .then((res) => {
+          if (res.data !== null) {
+            this.isLiked = true;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     getComments() {
       let user = JSON.parse(localStorage.getItem("user"));
       this.token = user.token;
@@ -146,7 +196,6 @@ export default {
         .get(`http://localhost:3000/api/feed/${this.post.id}/comment`, config)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             this.comments = res.data;
           }
         })
@@ -158,6 +207,7 @@ export default {
   mounted() {
     this.getLike();
     this.getComments();
+    this.displayLiked();
   },
 };
 </script>
@@ -208,6 +258,7 @@ header {
     justify-content: space-between;
     align-items: center;
     width: 6rem;
+    cursor: pointer;
     .fa-ellipsis-h {
       font-size: 2rem;
     }
@@ -226,6 +277,8 @@ header {
 }
 footer {
   width: 100%;
+  background-color: white;
+  // padding: 1rem;
   .numbers {
     cursor: pointer;
     display: flex;
@@ -241,23 +294,46 @@ footer {
     align-items: center;
     padding: 0.5rem 1.5rem;
   }
+  .commentWrapper {
+    background-color: white;
+    div {
+      display: flex;
+      flex: 1;
+      padding: 1rem;
+      margin: 0 1rem;
+    }
+    img {
+      object-fit: cover;
+      margin: 0 1rem 0 0;
+      border-radius: 50%;
+      width: 8rem;
+      height: 8rem;
+    }
+  }
   .comment {
-    padding: 0.5rem 1.5rem;
-    background-color: #fff2f2;
     font-size: 1.6rem;
     display: flex;
+    flex: 1;
+    flex-direction: column;
+    background-color: white;
+    .usernameComment {
+      padding-right: 1.5rem;
+      font-weight: 600;
+    }
     .dateComment {
+      font-size: 1.2rem;
+      background-color: #fff2f2;
+      font-style: italic;
       display: flex;
       align-items: center;
-      background-color: white;
       padding: 1rem;
-      border-radius: 0 1.5rem 1.5rem 0;
+      // border-radius: 0 1.5rem 1.5rem 0;
     }
     .contentComment {
       padding: 1rem;
-      background-color: white;
+      // background-color: white;
       flex: 1;
-      border-radius: 1.5rem 0 0 1.5rem;
+      // border-radius: 1.5rem 0 0 1.5rem;
     }
   }
 }

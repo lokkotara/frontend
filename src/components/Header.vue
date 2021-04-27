@@ -77,11 +77,6 @@ export default {
   width: 100%;
   background-color: rgba(35, 49, 73, 0.972);
   background-image: var(--Gradient-Color-Alt);
-  // background-image: linear-gradient(
-  //   315deg,
-  //   #4f6791 0%,
-  //   rgba(35, 49, 73, 0.972) 74%
-  // );
   color: #fff2f2;
   display: flex;
   justify-content: space-around;

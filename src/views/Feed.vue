@@ -2,6 +2,7 @@
   <div>
     <Header />
     <main class="mainFeed">
+      <Publish />
       <h1>Fil d'actualité</h1>
       <article class="postArticle" v-for="post in allPosts" :key="post.id">
         <Post :post="post" :likes="post.likes" />
@@ -15,6 +16,7 @@
 import Comments from "../components/Comments.vue";
 import Post from "../components/Post.vue";
 import Header from "../components/Header.vue";
+import Publish from "../components/Publish.vue";
 import avatar from "../assets/avatarDefault.png";
 const moment = require("moment");
 moment.locale("fr");
@@ -23,6 +25,7 @@ export default {
   name: "Feed",
   components: {
     Header,
+    Publish,
     Post,
     Comments,
   },
