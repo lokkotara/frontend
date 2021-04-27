@@ -8,8 +8,8 @@
       placeholder="Votre commentaire..."
     />
     <span
-      @click="sendComment"
-      @displayChanges="$emit"
+      @click.prevent="sendComment"
+      @displayChanges="$emit(getAllPosts)"
       class="fas fa-chevron-right validate"
     ></span>
   </div>

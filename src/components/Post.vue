@@ -306,7 +306,6 @@ header {
 footer {
   width: 100%;
   background-color: white;
-  // padding: 1rem;
   .numbers {
     cursor: pointer;
     display: flex;
@@ -355,13 +354,10 @@ footer {
       display: flex;
       align-items: center;
       padding: 1rem;
-      // border-radius: 0 1.5rem 1.5rem 0;
     }
     .contentComment {
       padding: 1rem;
-      // background-color: white;
       flex: 1;
-      // border-radius: 1.5rem 0 0 1.5rem;
     }
   }
 }
