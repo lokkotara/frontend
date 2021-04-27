@@ -41,8 +41,11 @@
     </div>
     <footer>
       <div class="numbers" @click="toggle">
-        <span>{{ like.length }} likes</span>
-        <span>{{ comments.length }} commentaires</span>
+        <span>{{ like.length }} {{ like.length > 1 ? "likes" : "like" }}</span>
+        <span
+          >{{ comments.length }}
+          {{ comments.length > 1 ? "commentaires" : "commentaire" }}</span
+        >
       </div>
       <div v-if="isDisplay">
         <div

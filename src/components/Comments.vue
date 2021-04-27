@@ -8,8 +8,7 @@
       placeholder="Votre commentaire..."
     />
     <span
-      @click.prevent="sendComment"
-      @displayChanges="$emit(getAllPosts)"
+      @click.prevent="sendComment, getAllPosts"
       class="fas fa-chevron-right validate"
     ></span>
   </div>
@@ -33,6 +32,9 @@ export default {
     },
   },
   methods: {
+    getAllPosts() {
+      this.$emit("get-all-posts");
+    },
     getCurrentUser() {
       this.user = JSON.parse(localStorage.getItem("user"));
       let token = this.user.token;
