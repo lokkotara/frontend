@@ -1,11 +1,9 @@
 <template>
   <div class="publish">
-    <input
-      type="textarea"
+    <textarea
+      v-model="message"
       placeholder="Que voulez-vous partagez... ?"
-      name=""
-      id=""
-    />
+    ></textarea>
     <div class="optionWrapper">
       <span class="fas fa-grin-beam"></span>
       <span class="fas fa-paperclip"></span>
@@ -37,7 +35,7 @@ export default {
   display: flex;
   border-radius: 25px;
   padding: 0.5rem;
-  input {
+  textarea {
     height: 16rem;
     width: 100%;
     border-radius: 20px 0 0 20px;
@@ -60,5 +58,8 @@ export default {
       color: var(--Light-Color);
     }
   }
+}
+.test {
+  background-color: lightgray;
 }
 </style>

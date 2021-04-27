@@ -14,10 +14,16 @@
           />
         </router-link>
         <div class="subInfos">
-          <span
-            >{{ post.User.username }} |
-            {{ date(post.createdAt).format("L") }}</span
+          <router-link
+            :to="{
+              name: 'UserProfile',
+              params: { id: post.User.id },
+            }"
           >
+            <span class="postUsername">
+              {{ post.User.username }}
+            </span>
+          </router-link>
           <span class="date">{{ moment(post.createdAt).fromNow() }}</span>
         </div>
       </div>
@@ -45,10 +51,29 @@
           :key="comment.id"
         >
           <div>
-            <img :src="avatar" alt="" />
+            <router-link
+              :to="{
+                name: 'UserProfile',
+                params: { id: comment.User.id },
+              }"
+            >
+              <img
+                :src="comment.User.image === null ? avatar : comment.User.image"
+                alt=""
+              />
+            </router-link>
             <span class="comment">
-              <span class="dateComment"
-                ><span class="usernameComment">Florian</span>
+              <span class="dateComment">
+                <router-link
+                  :to="{
+                    name: 'UserProfile',
+                    params: { id: comment.User.id },
+                  }"
+                >
+                  <span class="usernameComment">
+                    {{ comment.User.username }}
+                  </span>
+                </router-link>
                 {{ moment(comment.createdAt).fromNow() }}</span
               >
               <span class="contentComment">{{ comment.content }}</span>
@@ -251,6 +276,9 @@ header {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      .postUsername {
+        font-weight: bold;
+      }
     }
   }
   .icons {
@@ -298,7 +326,7 @@ footer {
     background-color: white;
     div {
       display: flex;
-      flex: 1;
+      align-items: center;
       padding: 1rem;
       margin: 0 1rem;
     }
@@ -306,8 +334,8 @@ footer {
       object-fit: cover;
       margin: 0 1rem 0 0;
       border-radius: 50%;
-      width: 8rem;
-      height: 8rem;
+      width: 6rem;
+      height: 6rem;
     }
   }
   .comment {
