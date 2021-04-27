@@ -7,7 +7,11 @@
       type="text"
       placeholder="Votre commentaire..."
     />
-    <span @click="sendComment" class="fas fa-chevron-right validate"></span>
+    <span
+      @click="sendComment"
+      @displayChanges="$emit"
+      class="fas fa-chevron-right validate"
+    ></span>
   </div>
 </template>
 

@@ -4,11 +4,7 @@
     <main class="mainFeed">
       <h1>Fil d'actualité</h1>
       <article class="postArticle" v-for="post in allPosts" :key="post.id">
-        <Post
-          :post="post"
-          @like-the-post="getAllPosts, say('ça marche')"
-          :likes="post.likes"
-        />
+        <Post :post="post" :likes="post.likes" />
         <Comments :postId="post" />
       </article>
     </main>

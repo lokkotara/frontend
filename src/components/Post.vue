@@ -14,8 +14,8 @@
       <div class="icons">
         <span
           class="fas fa-heart"
-          :class="classLike"
-          @click="likePost(post.id), $emit('likeThePost')"
+          :class="{ active: isLiked }"
+          @click="isItLiked, likePost(post.id)"
         ></span>
         <span class="fas fa-ellipsis-h"></span>
       </div>
@@ -26,11 +26,14 @@
     <footer>
       <div class="numbers" @click="toggle">
         <span>{{ like.length }} likes</span>
-        <span>{{ post.comments }} commentaires</span>
+        <span>{{ comments.length }} commentaires</span>
       </div>
       <div v-if="isDisplay">
-        <div class="comment" v-for="comment in post.Comments" :key="comment.id">
-          {{ moment(comment.createdAt).fromNow() }} : {{ comment.content }}
+        <div class="comment" v-for="comment in comments" :key="comment.id">
+          <span class="contentComment">{{ comment.content }}</span>
+          <span class="dateComment">{{
+            moment(comment.createdAt).fromNow()
+          }}</span>
         </div>
       </div>
     </footer>
@@ -54,6 +57,7 @@ export default {
       isDisplay: false,
       isLiked: "",
       like: [],
+      comments: [],
     };
   },
   props: {
@@ -67,7 +71,6 @@ export default {
     },
   },
   methods: {
-    displayColor() {},
     toggle() {
       if (this.isDisplay) {
         this.isDisplay = false;
@@ -76,13 +79,11 @@ export default {
       }
     },
     isItLiked() {
-      let isLiked = this.isLiked;
-      if (isLiked) {
-        console.log("if : " + this.isLiked);
+      if (this.isLiked) {
         this.isLiked = false;
         return -1;
       } else {
-        console.log("else : " + this.isLiked);
+        this.isLiked = true;
         return 1;
       }
     },
@@ -95,6 +96,7 @@ export default {
           authorization: "Bearer: " + this.token,
         },
       };
+      console.log("bodyLike likes : " + bodyLike);
       axios
         .post(
           `http://localhost:3000/api/feed/${id}/like`,
@@ -106,7 +108,6 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             console.log("Vote pris en compte !");
-            this.isLiked = !this.isLiked;
             this.getLike();
           }
         })
@@ -126,8 +127,27 @@ export default {
         .get(`http://localhost:3000/api/feed/${this.post.id}/like`, config)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             this.like = res.data;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getComments() {
+      let user = JSON.parse(localStorage.getItem("user"));
+      this.token = user.token;
+      let config = {
+        headers: {
+          authorization: "Bearer: " + this.token,
+        },
+      };
+      axios
+        .get(`http://localhost:3000/api/feed/${this.post.id}/comment`, config)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            this.comments = res.data;
           }
         })
         .catch((error) => {
@@ -137,6 +157,7 @@ export default {
   },
   mounted() {
     this.getLike();
+    this.getComments();
   },
 };
 </script>
@@ -224,6 +245,20 @@ footer {
     padding: 0.5rem 1.5rem;
     background-color: #fff2f2;
     font-size: 1.6rem;
+    display: flex;
+    .dateComment {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      padding: 1rem;
+      border-radius: 0 1.5rem 1.5rem 0;
+    }
+    .contentComment {
+      padding: 1rem;
+      background-color: white;
+      flex: 1;
+      border-radius: 1.5rem 0 0 1.5rem;
+    }
   }
 }
 </style>
