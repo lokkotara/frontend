@@ -56,6 +56,7 @@ export default {
       axios
         .get("http://localhost:3000/api/feed/", config)
         .then((res) => {
+          console.log(res.data);
           this.allPosts = res.data;
         })
         .catch((error) => {

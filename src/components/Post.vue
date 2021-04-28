@@ -90,8 +90,8 @@
 
 <script>
 import avatar from "../assets/avatarDefault.png";
-let moment = require("moment");
-moment.locale("fr");
+// let moment = require("moment");
+// moment.locale("fr");
 import axios from "axios";
 export default {
   name: "Feed",
@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       token: "",
-      moment: moment,
+      // moment: moment,
       avatar: avatar,
       active: false,
       isDisplay: false,
@@ -109,7 +109,7 @@ export default {
     };
   },
   computed: {
-    date: function () {
+    moment: function () {
       let moment = require("moment");
       moment.locale("fr");
       return moment;
