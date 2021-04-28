@@ -7,10 +7,7 @@
       type="text"
       placeholder="Votre commentaire..."
     />
-    <span
-      @click.prevent="sendComment, getAllPosts"
-      class="fas fa-chevron-right validate"
-    ></span>
+    <span @click="sendComment" class="fas fa-chevron-right validate"></span>
   </div>
 </template>
 
@@ -32,9 +29,6 @@ export default {
     },
   },
   methods: {
-    getAllPosts() {
-      this.$emit("get-all-posts");
-    },
     getCurrentUser() {
       this.user = JSON.parse(localStorage.getItem("user"));
       let token = this.user.token;
@@ -78,8 +72,14 @@ export default {
         )
         .then((res) => {
           if (res.status === 201) {
-            console.log("Commentaire envoyé");
+            console.log("Commentaire envoyé" + res);
           }
+        })
+        .then(() => {
+          this.$emit("get-all-posts");
+        })
+        .then(() => {
+          this.comment = null;
         })
         .catch((e) => {
           console.error("erreur : " + e);

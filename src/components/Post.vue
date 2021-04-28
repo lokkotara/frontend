@@ -43,14 +43,14 @@
       <div class="numbers" @click="toggle">
         <span>{{ like.length }} {{ like.length > 1 ? "likes" : "like" }}</span>
         <span
-          >{{ comments.length }}
-          {{ comments.length > 1 ? "commentaires" : "commentaire" }}</span
+          >{{ post.Comments.length }}
+          {{ post.Comments.length > 1 ? "commentaires" : "commentaire" }}</span
         >
       </div>
-      <div v-if="isDisplay">
+      <div v-show="isDisplay">
         <div
           class="commentWrapper"
-          v-for="comment in comments"
+          v-for="comment in post.Comments"
           :key="comment.id"
         >
           <div>
@@ -90,8 +90,6 @@
 
 <script>
 import avatar from "../assets/avatarDefault.png";
-// let moment = require("moment");
-// moment.locale("fr");
 import axios from "axios";
 export default {
   name: "Feed",
@@ -99,13 +97,11 @@ export default {
   data() {
     return {
       token: "",
-      // moment: moment,
       avatar: avatar,
       active: false,
       isDisplay: false,
       isLiked: "",
       like: [],
-      comments: [],
     };
   },
   computed: {
@@ -151,7 +147,6 @@ export default {
           authorization: "Bearer: " + this.token,
         },
       };
-      console.log("bodyLike likes : " + bodyLike);
       axios
         .post(
           `http://localhost:3000/api/feed/${id}/like`,
@@ -162,7 +157,6 @@ export default {
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log("Vote pris en compte !");
             this.getLike();
           }
         })
@@ -212,29 +206,9 @@ export default {
           console.error(error);
         });
     },
-    getComments() {
-      let user = JSON.parse(localStorage.getItem("user"));
-      this.token = user.token;
-      let config = {
-        headers: {
-          authorization: "Bearer: " + this.token,
-        },
-      };
-      axios
-        .get(`http://localhost:3000/api/feed/${this.post.id}/comment`, config)
-        .then((res) => {
-          if (res.status === 200) {
-            this.comments = res.data;
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
   },
   mounted() {
     this.getLike();
-    this.getComments();
     this.displayLiked();
   },
 };

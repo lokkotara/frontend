@@ -44,6 +44,7 @@ export default {
   },
   methods: {
     getAllPosts() {
+      console.log("je suis appelé !");
       let user = JSON.parse(localStorage.getItem("user"));
       this.token = user.token;
       this.userId = user.userId;
@@ -57,14 +58,14 @@ export default {
         .get("http://localhost:3000/api/feed/", config)
         .then((res) => {
           console.log(res.data);
+          return res;
+        })
+        .then((res) => {
           this.allPosts = res.data;
         })
         .catch((error) => {
           console.error({ error });
         });
-    },
-    say(msg) {
-      console.log(msg);
     },
   },
   mounted() {
