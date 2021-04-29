@@ -4,6 +4,7 @@
       ><img src="@/assets/logoLong-alt.png" class="logoLong" alt="" />
       <img src="@/assets/logo.png" class="logoShort" alt="" />
     </router-link>
+    <!-- <i class="fas fa-edit"></i> -->
     <div class="profileBtn">
       <span class="pseudo">{{ username }}</span>
       <img :src="image" alt="photo de profil" />
@@ -88,6 +89,9 @@ export default {
 }
 .logoLong {
   display: none;
+}
+.fa-edit {
+  font-size: 6rem;
 }
 .profileBtn {
   display: flex;
