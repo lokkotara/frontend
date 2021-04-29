@@ -4,18 +4,24 @@
     <main class="mainProfile">
       <div class="profile">
         <img :src="image" alt="" class="imgProfile" />
-        <label for="image">Modifier son avatar</label>
-        <!-- <input type="file" name="image" id="image" /> -->
         <button class="btn btn-info" @click="onPickFile">
-          Charger une image
+          Modifier son image
         </button>
         <input
           type="file"
           style="display: none"
           ref="fileInput"
-          accept="image/*"
+          accept="image/jpeg, image/jpg, image/png,"
           @change="onFilePicked"
         />
+        <span class="imgContent"
+          >{{ newImage !== null ? newImage.name : emptyMessage
+          }}<i
+            class="fas fa-times-circle"
+            v-if="newImage !== null"
+            @click="clearImg"
+          ></i
+        ></span>
         <p>
           <span class="profileTitle">Pseudonyme</span>
           <input
@@ -52,7 +58,9 @@
         <p class="membership">
           Devenu membre le {{ moment(createdAt).format("DD MMM YYYY à LT") }}
         </p>
-        <span class="fas fa-trash-alt">Supprimer le compte</span>
+        <span class="fas fa-trash-alt" @click="deleteProfileUser"
+          >Supprimer le compte</span
+        >
       </div>
     </main>
   </div>
@@ -72,13 +80,14 @@ export default {
   data() {
     return {
       moment: moment,
+      emptyMessage: "Aucune image sélectionnée",
       user: [],
       token: "",
       userId: "",
       isAdmin: "",
       id: "",
       image: avatar,
-      newImage: "",
+      newImage: null,
       username: "",
       email: "",
       password: "",
@@ -87,6 +96,9 @@ export default {
     };
   },
   methods: {
+    clearImg() {
+      this.newImage = null;
+    },
     onPickFile() {
       this.$refs.fileInput.click();
     },
@@ -104,8 +116,13 @@ export default {
       console.log(this.image);
       let user = JSON.parse(localStorage.getItem("user"));
       this.token = user.token;
-      let newPublication = new FormData();
-      newPublication.append("image", this.newImage);
+      let updateUser = new FormData();
+      console.log(this.newImage);
+      if (this.newImage !== null) {
+        updateUser.append("image", this.newImage);
+      }
+      updateUser.append("username", this.username);
+      updateUser.append("email", this.email);
       let config = {
         headers: {
           authorization: "Bearer: " + this.token,
@@ -117,12 +134,13 @@ export default {
       await axios
         .patch(
           `http://localhost:3000/api/auth/profil/${id}`,
-          newPublication,
+          updateUser,
           config
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log("Profil modifié" + res);
+            console.log("Profil modifié");
+            this.newImage = null;
             this.getProfileUser();
             this.$refs.header.getUser();
           }
@@ -156,6 +174,25 @@ export default {
           console.log({ error });
         });
     },
+    deleteProfileUser() {
+      this.user = JSON.parse(localStorage.getItem("user"));
+      let token = this.user.token;
+      let userId = this.user.userId;
+      let config = {
+        headers: {
+          authorization: `Bearer: ${token}`,
+        },
+      };
+      axios
+        .delete(`http://localhost:3000/api/auth/profil/${userId}`, config)
+        .then(() => {
+          console.log("Compte supprimé !");
+          this.$refs.header.logout();
+        })
+        .catch((error) => {
+          console.log({ error });
+        });
+    },
   },
   beforeMount() {
     this.getProfileUser();
@@ -181,9 +218,22 @@ export default {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
     background-color: var(--Light-Color);
     width: 100%;
+    .btn {
+      border: none;
+    }
+    .imgContent {
+      height: 2rem;
+      margin: 1rem 0 2rem 0;
+    }
     p {
       width: 80%;
       display: flex;
+    }
+    .fa-times-circle {
+      font-size: 2rem;
+      color: var(--Secondary-Color-Alt);
+      margin-left: 1rem;
+      cursor: pointer;
     }
     .membership {
       justify-content: center;
@@ -221,7 +271,8 @@ export default {
         cursor: pointer;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
       }
-      .fa-cog {
+      .fa-cog,
+      .btn {
         background-image: linear-gradient(
           315deg,
           #4f6791 0%,
@@ -249,6 +300,7 @@ export default {
     border-radius: 50%;
     height: 20rem;
     object-fit: cover;
+    margin-bottom: 1.5rem;
   }
   .actions {
     background-color: rgba(35, 49, 73, 0.972);

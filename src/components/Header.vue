@@ -15,11 +15,7 @@
       ></span>
       <div class="dropDown" v-show="toggle">
         <router-link to="/profile"><p>Accéder à mon profil</p> </router-link>
-        <router-link to="/"
-          ><span class="fas fa-sign-out-alt" @click="logout"
-            >Se deconnecter</span
-          >
-        </router-link>
+        <span class="fas fa-sign-out-alt" @click="logout">Se deconnecter</span>
       </div>
     </div>
   </header>
@@ -65,6 +61,7 @@ export default {
     },
     logout() {
       localStorage.clear();
+      this.$router.push("/");
     },
   },
   beforeMount() {

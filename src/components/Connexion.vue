@@ -1,10 +1,10 @@
 <template>
   <section class="rightPart">
     <header>
-      <div @click="showSignup">
+      <div @click="showSignup" id="signup" :class="{ isFocused: !onLogin }">
         <h3>Inscription</h3>
       </div>
-      <div @click="showLogin">
+      <div @click="showLogin" id="login" :class="{ isFocused: onLogin }">
         <h3>Connexion</h3>
       </div>
     </header>
@@ -94,6 +94,7 @@
             @click="signup"
             value="S'inscrire"
           />
+          <span class="go">Bienvenue sur le réseau</span>
         </template>
       </div>
     </div>
@@ -191,6 +192,9 @@ export default {
     font-weight: 800;
     width: 90%;
     max-width: 70rem;
+    .isFocused {
+      border: 1px solid var(--Secondary-Color-Alt);
+    }
     div {
       cursor: pointer;
       padding: 2rem;
@@ -240,6 +244,12 @@ export default {
         color: var(--Secondary-Color-Alt);
         text-align: center;
         font-weight: 600;
+      }
+      .go {
+        color: var(--Primary-Color);
+        text-align: center;
+        font-weight: 600;
+        font-style: italic;
       }
     }
   }
