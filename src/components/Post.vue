@@ -230,12 +230,17 @@ export default {
   width: 100%;
   background-color: white;
   padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
   p {
     text-overflow: fade;
   }
 }
 .imagePost {
-  width: 100%;
+  max-width: 100%;
+  align-self: center;
+  border-radius: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 header {
   border-radius: 2rem 2rem 0 0;

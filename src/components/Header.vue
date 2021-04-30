@@ -138,6 +138,9 @@ export default {
   width: 25rem;
   border-radius: 0 0 25rem 25rem;
   transition: cubic-bezier(0, 0.92, 0, 1);
+  .fa-sign-out-alt {
+    cursor: pointer;
+  }
   p,
   span {
     &:hover {
