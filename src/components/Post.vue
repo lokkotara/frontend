@@ -38,6 +38,7 @@
     </header>
     <div class="content">
       <p>{{ post.content }}</p>
+      <img :src="post.image" alt="image de contenu" class="imagePost" />
     </div>
     <footer>
       <div class="numbers" @click="toggle">
@@ -232,6 +233,9 @@ export default {
   p {
     text-overflow: fade;
   }
+}
+.imagePost {
+  width: 100%;
 }
 header {
   border-radius: 2rem 2rem 0 0;

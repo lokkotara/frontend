@@ -30,7 +30,7 @@
             v-model="username"
             :placeholder="username"
           />
-          <span class="fas fa-check-circle"></span>
+          <span class="fas fa-eye"></span>
         </p>
         <p>
           <span class="profileTitle">E-mail</span>
@@ -40,9 +40,9 @@
             v-model="email"
             :placeholder="email"
           />
-          <span class="fas fa-check-circle"></span>
+          <span class="fas fa-eye"></span>
         </p>
-        <p>
+        <!-- <p>
           <span class="profileTitle">Mot de passe</span>
           <input
             type="text"
@@ -50,7 +50,17 @@
             v-model="password"
             :placeholder="password"
           />
-          <span class="fas fa-check-circle"></span>
+          <span class="fas fa-eye"></span>
+        </p> -->
+        <p>
+          <span class="profileTitle">Bio</span>
+          <input
+            type="text"
+            class="profileContent"
+            v-model="bio"
+            :placeholder="bio"
+          />
+          <span class="fas fa-eye"></span>
         </p>
         <span class="fas fa-cog" @click="modifyUser">Modifier son profil</span>
       </div>
@@ -90,6 +100,8 @@ export default {
       newImage: null,
       username: "",
       email: "",
+      emailTest: "",
+      bio: "",
       password: "",
       createdAt: "",
       testingPassword: "********",
@@ -113,16 +125,15 @@ export default {
       this.newImage = files[0];
     },
     async modifyUser() {
-      console.log(this.image);
       let user = JSON.parse(localStorage.getItem("user"));
       this.token = user.token;
       let updateUser = new FormData();
-      console.log(this.newImage);
       if (this.newImage !== null) {
         updateUser.append("image", this.newImage);
       }
       updateUser.append("username", this.username);
       updateUser.append("email", this.email);
+      updateUser.append("bio", this.bio);
       let config = {
         headers: {
           authorization: "Bearer: " + this.token,
@@ -130,7 +141,6 @@ export default {
         },
       };
       let id = this.user.userId;
-      console.log("id utilisateur : " + id);
       await axios
         .patch(
           `http://localhost:3000/api/auth/profil/${id}`,
@@ -138,8 +148,8 @@ export default {
           config
         )
         .then((res) => {
+          console.log(res.data.message);
           if (res.status === 200) {
-            console.log("Profil modifié");
             this.newImage = null;
             this.getProfileUser();
             this.$refs.header.getUser();
@@ -166,6 +176,7 @@ export default {
           this.email = data.email;
           this.password = data.password;
           this.createdAt = data.createdAt;
+          this.bio = data.bio;
           if (data.image !== null) {
             this.image = data.image;
           }
@@ -186,7 +197,6 @@ export default {
       axios
         .delete(`http://localhost:3000/api/auth/profil/${userId}`, config)
         .then(() => {
-          console.log("Compte supprimé !");
           this.$refs.header.logout();
         })
         .catch((error) => {
@@ -255,7 +265,7 @@ export default {
       flex: 1;
       text-align: center;
     }
-    .fa-check-circle {
+    .fa-eye {
       margin-left: 0.5rem;
       color: green;
       align-self: center;
@@ -336,5 +346,3 @@ export default {
   }
 }
 </style>
-
-function newFunction(token) { return `Bearer: ${token}`; }

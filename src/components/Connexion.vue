@@ -193,7 +193,7 @@ export default {
     width: 90%;
     max-width: 70rem;
     .isFocused {
-      border: 1px solid var(--Secondary-Color-Alt);
+      border-bottom: 0.5rem solid var(--Secondary-Color-Alt);
     }
     div {
       cursor: pointer;
@@ -214,7 +214,9 @@ export default {
     max-width: 70rem;
     .form {
       background-color: var(--Light-Color);
-      border: var(--Dark-Color) 1px solid;
+      border-left: var(--Dark-Color) 1px solid;
+      border-right: var(--Dark-Color) 1px solid;
+      border-bottom: var(--Dark-Color) 1px solid;
       width: 100%;
       padding: 2rem;
       display: flex;

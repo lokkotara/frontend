@@ -12,12 +12,8 @@
           <span class="profileContent">{{ username }}</span>
         </p>
         <p>
-          <span class="profileTitle">E-mail</span>
-          <span class="profileContent">{{ email }}</span>
-        </p>
-        <p>
-          <span class="profileTitle">Mot de passe</span>
-          <span class="profileContent">{{ testingPassword }}</span>
+          <span class="profileTitle">Biographie</span>
+          <span class="profileContent">{{ bio }}</span>
         </p>
       </div>
       <div class="actions">
@@ -50,6 +46,7 @@ export default {
       image: avatar,
       username: "",
       email: "",
+      bio: "",
       password: "",
       createdAt: "",
       testingPassword: "********",
@@ -71,6 +68,7 @@ export default {
           let data = res.data;
           this.username = data.username;
           this.email = data.email;
+          this.bio = data.bio;
           this.password = data.password;
           this.createdAt = data.createdAt;
           if (data.image !== null) {

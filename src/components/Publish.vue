@@ -6,10 +6,17 @@
     ></textarea>
     <div class="optionWrapper">
       <span class="fas fa-grin-beam"></span>
-      <span class="fas fa-paperclip"></span>
-      <!-- <input type="file" name="image" id="image" /> -->
+      <span class="fas fa-paperclip" @click="onPickFile"></span>
+      <input
+        type="file"
+        style="display: none"
+        ref="fileInput"
+        accept="image/jpeg, image/jpg, image/png,"
+        @change="onFilePicked"
+      />
       <span class="fas fa-chevron-right validate" @click="send"></span>
     </div>
+    <img src="image" alt="" />
   </div>
 </template>
 
@@ -20,18 +27,33 @@ export default {
   data() {
     return {
       message: "",
+      image: null,
     };
   },
   methods: {
+    onPickFile() {
+      this.$refs.fileInput.click();
+    },
+    onFilePicked(event) {
+      const files = event.target.files;
+      // let filename = files[0].name;
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(files[0]);
+      this.image = files[0];
+    },
     async send() {
       let user = JSON.parse(localStorage.getItem("user"));
       this.token = user.token;
-      let newPost = {
-        content: this.message,
-      };
+      let newPost = new FormData();
+      newPost.append("content", this.message);
+      newPost.append("image", this.image);
       let config = {
         headers: {
           authorization: "Bearer: " + this.token,
+          "Content-Type": "application/form-data",
         },
       };
       await axios
