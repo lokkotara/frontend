@@ -5,7 +5,7 @@
       <div class="profile">
         <img :src="image" alt="" class="imgProfile" />
         <p class="membership">
-          Devenu membre {{ moment(createdAt).fromNow() }}
+          Membre depuis le {{ moment(createdAt).format("DD MMMM YYYY") }}
         </p>
         <p>
           <span class="profileTitle">Pseudonyme</span>
@@ -49,7 +49,6 @@ export default {
       bio: "",
       password: "",
       createdAt: "",
-      testingPassword: "********",
     };
   },
   methods: {

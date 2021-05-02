@@ -6,6 +6,7 @@
 
 <style lang="scss">
 /* Réglages généraux */
+@import "~@sweetalert2/theme-borderless/borderless.scss";
 @import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700;800&family=Raleway:ital,wght@0,300;0,400;1,400&display=swap");
 :root {
   --Primary-Color: #091f43;
@@ -122,5 +123,8 @@ li {
 
 main {
   padding-bottom: 5rem;
+}
+.swal2-popup {
+  font-size: 1.7rem !important;
 }
 </style>

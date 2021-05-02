@@ -3,74 +3,79 @@
     <Header :user="user" ref="header" />
     <main class="mainProfile">
       <div class="profile">
-        <img :src="image" alt="" class="imgProfile" />
-        <button class="btn btn-info" @click="onPickFile">
-          Modifier son image
-        </button>
-        <input
-          type="file"
-          style="display: none"
-          ref="fileInput"
-          accept="image/jpeg, image/jpg, image/png,"
-          @change="onFilePicked"
-        />
-        <span class="imgContent"
-          >{{ newImage !== null ? newImage.name : emptyMessage
-          }}<i
-            class="fas fa-times-circle"
-            v-if="newImage !== null"
-            @click="clearImg"
-          ></i
-        ></span>
-        <p>
-          <span class="profileTitle">Pseudonyme</span>
+        <div class="leftPart">
+          <p class="title">Modification</p>
+          <span class="inputWrapper">
+            <span class="btn inputBtn" @click="getUsername">Pseudonyme</span>
+            <span class="newContent"
+              >{{ newUsername
+              }}<i
+                class="fas fa-times-circle"
+                v-if="newUsername !== null"
+                @click="newUsername = null"
+              ></i
+            ></span>
+          </span>
+          <span class="inputWrapper">
+            <span class="btn inputBtn" @click="getEmail">E-mail</span>
+            <span class="newContent"
+              >{{ newEmail
+              }}<i
+                class="fas fa-times-circle"
+                v-if="newEmail !== null"
+                @click="newEmail = null"
+              ></i
+            ></span>
+          </span>
+          <span class="inputWrapper">
+            <span class="btn inputBtn" @click="getBio">Biographie</span>
+            <span class="newContent"
+              >{{ newBio
+              }}<i
+                class="fas fa-times-circle"
+                v-if="newBio !== null"
+                @click="newBio = null"
+              ></i
+            ></span>
+          </span>
+        </div>
+        <div class="centerPart">
+          <h1>Règlages du profil</h1>
+          <p class="membership">
+            Membre depuis le {{ moment(createdAt).format("DD MMM YYYY") }}
+          </p>
+          <img :src="image" alt="" class="imgProfile" />
+          <button class="btn btn-info" @click="getImage">
+            Modifier son image
+          </button>
           <input
-            type="text"
-            class="profileContent"
-            v-model="username"
-            :placeholder="username"
+            type="file"
+            style="display: none"
+            ref="fileInput"
+            accept="image/jpeg, image/jpg, image/png,"
+            @change="onFilePicked"
           />
-          <span class="fas fa-eye"></span>
-        </p>
-        <p>
-          <span class="profileTitle">E-mail</span>
-          <input
-            type="text"
-            class="profileContent"
-            v-model="email"
-            :placeholder="email"
-          />
-          <span class="fas fa-eye"></span>
-        </p>
-        <!-- <p>
-          <span class="profileTitle">Mot de passe</span>
-          <input
-            type="text"
-            class="profileContent"
-            v-model="password"
-            :placeholder="password"
-          />
-          <span class="fas fa-eye"></span>
-        </p> -->
-        <p>
-          <span class="profileTitle">Bio</span>
-          <input
-            type="text"
-            class="profileContent"
-            v-model="bio"
-            :placeholder="bio"
-          />
-          <span class="fas fa-eye"></span>
-        </p>
-        <span class="fas fa-cog" @click="modifyUser">Modifier son profil</span>
-      </div>
-      <div class="actions">
-        <p class="membership">
-          Devenu membre le {{ moment(createdAt).format("DD MMM YYYY à LT") }}
-        </p>
-        <span class="fas fa-trash-alt" @click="deleteProfileUser"
-          >Supprimer le compte</span
-        >
+          <span class="imgContent"
+            >{{ newImage !== null ? newImage.name : emptyMessage
+            }}<i
+              class="fas fa-times-circle"
+              v-if="newImage !== null"
+              @click="newImage = null"
+            ></i
+          ></span>
+        </div>
+        <div class="rightPart">
+          <p class="title">Actions</p>
+          <span class="fas fa-cog inputBtn" @click="changePassword"
+            >Nouveau mot de passe</span
+          >
+          <span class="fas fa-clipboard-check inputBtn" @click="modifyUser"
+            >Valider les changements</span
+          >
+          <span class="btn fas fa-trash-alt inputBtn" @click="deleteProfileUser"
+            >Supprimer le compte</span
+          >
+        </div>
       </div>
     </main>
   </div>
@@ -99,30 +104,71 @@ export default {
       image: avatar,
       newImage: null,
       username: "",
+      newUsername: null,
       email: "",
-      emailTest: "",
+      newEmail: null,
       bio: "",
+      newBio: null,
       password: "",
       createdAt: "",
-      testingPassword: "********",
     };
   },
   methods: {
-    clearImg() {
-      this.newImage = null;
-    },
-    onPickFile() {
-      this.$refs.fileInput.click();
-    },
-    onFilePicked(event) {
-      const files = event.target.files;
-      // let filename = files[0].name;
-      const fileReader = new FileReader();
-      fileReader.addEventListener("load", () => {
-        this.imageUrl = fileReader.result;
+    async getUsername() {
+      const { value: username } = await this.$swal.fire({
+        title: "Changer de pseudonyme",
+        input: "text",
+        inputLabel: "Pseudo actuel : " + this.username,
+        inputPlaceholder: "Entrer votre nouveau pseudo",
       });
-      fileReader.readAsDataURL(files[0]);
-      this.newImage = files[0];
+      if (username) {
+        this.newUsername = username;
+      }
+    },
+    async getEmail() {
+      const { value: email } = await this.$swal.fire({
+        title: "Changer d'adresse mail",
+        input: "email",
+        inputLabel: "Email actuel : " + this.email,
+        inputPlaceholder: "Entrer votre nouvelle adresse",
+      });
+      if (email) {
+        this.newEmail = email;
+      }
+    },
+    async getBio() {
+      const { value: bio } = await this.$swal.fire({
+        title: "Changer votre bio",
+        input: "textarea",
+        inputLabel: "Bio actuel : " + this.bio,
+        inputPlaceholder: "Entrer votre nouvelle biographie",
+      });
+      if (bio) {
+        this.newBio = bio;
+      }
+    },
+    async getImage() {
+      const { value: file } = await this.$swal.fire({
+        title: "Select image",
+        input: "file",
+        inputAttributes: {
+          accept: "image/*",
+          "aria-label": "Upload your profile picture",
+        },
+      });
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.$swal.fire({
+            title: "Votre nouvel avatar",
+            imageUrl: e.target.result,
+            imageAlt: "L'image uploadé",
+          });
+        };
+        reader.readAsDataURL(file);
+        console.log(file);
+        this.newImage = file;
+      }
     },
     async modifyUser() {
       let user = JSON.parse(localStorage.getItem("user"));
@@ -131,9 +177,15 @@ export default {
       if (this.newImage !== null) {
         updateUser.append("image", this.newImage);
       }
-      updateUser.append("username", this.username);
-      updateUser.append("email", this.email);
-      updateUser.append("bio", this.bio);
+      if (this.newUsername !== null) {
+        updateUser.append("username", this.newUsername);
+      }
+      if (this.newEmail !== null) {
+        updateUser.append("email", this.newEmail);
+      }
+      if (this.newBio !== null) {
+        updateUser.append("bio", this.newBio);
+      }
       let config = {
         headers: {
           authorization: "Bearer: " + this.token,
@@ -151,6 +203,9 @@ export default {
           console.log(res.data.message);
           if (res.status === 200) {
             this.newImage = null;
+            this.newUsername = null;
+            this.newBio = null;
+            this.newEmail = null;
             this.getProfileUser();
             this.$refs.header.getUser();
           }
@@ -211,16 +266,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "~@sweetalert2/theme-borderless/borderless.scss";
 .mainProfile {
   background-image: url(../assets/ville.jpg);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 90%;
   .profile {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     margin: 5rem 0;
     padding: 2.5rem;
@@ -228,15 +283,90 @@ export default {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
     background-color: var(--Light-Color);
     width: 100%;
+    height: 70vh;
+    .title {
+      color: var(--Dark-Color);
+      justify-content: center;
+    }
+    .inputBtn {
+      // flex: 1;
+      text-align: center;
+    }
+    .leftPart {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: flex-start;
+      .title {
+        align-self: center;
+        font-family: "Karla", sans-serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+      }
+      .inputWrapper {
+        width: 100%;
+        display: flex;
+        .inputBtn {
+          flex: 1;
+        }
+        .newContent {
+          flex: 1;
+          border-radius: 0 2rem 2rem 0;
+          align-self: center;
+        }
+      }
+    }
+    .centerPart,
+    .rightPart {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      .title {
+        align-self: center;
+        font-family: "Karla", sans-serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+      }
+    }
+    .fa-clipboard-check,
+    .fa-cog,
     .btn {
+      background-image: linear-gradient(
+        315deg,
+        #4f6791 0%,
+        rgba(35, 49, 73, 0.972) 74%
+      );
       border: none;
+      padding: 1.5rem;
+      font-size: 2rem;
+      border-radius: 1.5rem;
+      color: var(--Light-Color);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      &:hover {
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+          0 10px 10px rgba(0, 0, 0, 0.22);
+      }
+      &:before {
+        padding: 1rem;
+      }
+    }
+    .newContent {
+      color: var(--Dark-Color);
+      padding-left: 1.5rem;
     }
     .imgContent {
       height: 2rem;
       margin: 1rem 0 2rem 0;
     }
     p {
-      width: 80%;
+      // width: 80%;
       display: flex;
     }
     .fa-times-circle {
@@ -245,88 +375,8 @@ export default {
       margin-left: 1rem;
       cursor: pointer;
     }
-    .membership {
-      justify-content: center;
-    }
-    .profileTitle {
-      background-color: var(--Primary-Color);
-      color: var(--Light-Color);
-      padding: 1.5rem;
-      border-radius: 1rem 0 0 1rem;
-      width: 15rem;
-      white-space: nowrap;
-      text-align: center;
-    }
-    .profileContent {
-      border-radius: 0 1rem 1rem 0;
-      padding: 1.5rem;
-      background-color: var(--Secondary-Color-Alt);
-      color: var(--Light-Color);
-      flex: 1;
-      text-align: center;
-    }
-    .fa-eye {
-      margin-left: 0.5rem;
-      color: green;
-      align-self: center;
-      width: 5rem;
-      text-align: center;
-      font-size: 5rem;
-    }
   }
-  @media screen and (min-width: 1024px) {
-    .profile {
-      width: 80%;
-      #image::file-selector-button {
-        cursor: pointer;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-      }
-      .fa-cog,
-      .btn {
-        background-image: linear-gradient(
-          315deg,
-          #4f6791 0%,
-          rgba(35, 49, 73, 0.972) 74%
-        );
-        padding: 1.5rem;
-        font-size: 2rem;
-        border-radius: 1.5rem;
-        color: var(--Light-Color);
-        cursor: pointer;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        &:hover {
-          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-            0 10px 10px rgba(0, 0, 0, 0.22);
-        }
-        &:before {
-          padding: 1rem;
-        }
-      }
-    }
-  }
-  .imgProfile {
-    width: 20rem;
-    border-radius: 50%;
-    height: 20rem;
-    object-fit: cover;
-    margin-bottom: 1.5rem;
-  }
-  .actions {
-    background-color: rgba(35, 49, 73, 0.972);
-    background-image: var(--Gradient-Color-Alt);
-    color: var(--Light-Color);
-    border-radius: 25px;
-    padding: 5rem;
-    border: 3px solid var(--Secondary-Color-Alt);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 20rem;
-    justify-content: space-around;
-    span {
-      font-size: 2rem;
-    }
+  .rightPart {
     .fa-trash-alt {
       color: var(--Secondary-Color-Alt);
       background-color: var(--Light-Color);
@@ -343,6 +393,22 @@ export default {
         padding: 1rem;
       }
     }
+  }
+  @media screen and (min-width: 1024px) {
+    .profile {
+      width: 80%;
+      #image::file-selector-button {
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      }
+    }
+  }
+  .imgProfile {
+    width: 30rem;
+    height: 30rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
   }
 }
 </style>

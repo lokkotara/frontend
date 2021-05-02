@@ -33,7 +33,7 @@
           :class="{ active: isLiked }"
           @click="isItLiked, likePost(post.id)"
         ></span>
-        <span class="fas fa-ellipsis-h"></span>
+        <span class="fas fa-ellipsis-h" @click="showAlert(post.id)"></span>
       </div>
     </header>
     <div class="content">
@@ -103,6 +103,8 @@ export default {
       isDisplay: false,
       isLiked: "",
       like: [],
+      newContent: null,
+      newImage: null,
     };
   },
   computed: {
@@ -123,6 +125,158 @@ export default {
     },
   },
   methods: {
+    async showAlert(postId) {
+      this.$swal({
+        title: "Options du message",
+        text: "Que voulez-vous faire ?",
+        showCancelButton: false,
+        showDenyButton: true,
+        confirmButtonText: "Modifier le message",
+        denyButtonText: "Supprimer le message",
+        cancelButtonText: "Annuler",
+        showCloseButton: true,
+        showLoaderOnConfirm: true,
+      }).then(async (res) => {
+        if (res.value) {
+          this.newContent = await this.$swal
+            .fire({
+              title: "Changer le contenu",
+              input: "textarea",
+              inputPlaceholder: "Modifiez votre post ici",
+              showCloseButton: true,
+              showDenyButton: true,
+              returnInputValueOnDeny: true,
+              confirmButtonText: "Changer l'image ?",
+              denyButtonText: "Modifier le post",
+            })
+            .then(async (res) => {
+              this.newContent = res.value;
+              if (res.isConfirmed) {
+                const { value: image } = await this.$swal.fire({
+                  title: "Select image",
+                  input: "file",
+                  inputAttributes: {
+                    accept: "image/jpg, image/jpeg, image/png",
+                    "aria-label": "Upload your profile picture",
+                  },
+                });
+                console.log("file : " + image);
+                if (image) {
+                  const reader = new FileReader();
+                  reader.readAsDataURL(image);
+                  this.newImage = image;
+                }
+                this.newContent = res.value;
+                this.$swal(
+                  "Modifié !!",
+                  "Ce message a été mis à jour",
+                  "success"
+                );
+                let updatePost = new FormData();
+                if (this.newImage !== null) {
+                  updatePost.append("image", this.newImage);
+                }
+                if (this.newContent !== null) {
+                  updatePost.append("content", this.newContent);
+                }
+                let config = {
+                  headers: {
+                    authorization: "Bearer: " + this.token,
+                    "Content-Type": "application/form-data",
+                  },
+                };
+                let id = this.post.id;
+                axios
+                  .patch(
+                    `http://localhost:3000/api/feed/${id}`,
+                    updatePost,
+                    config
+                  )
+                  .then(() => {
+                    this.$emit("get-all-posts");
+                  })
+                  .catch((e) => {
+                    console.error("erreur : " + e);
+                  });
+              } else if (res.isDenied) {
+                this.newContent = res.value;
+                this.$swal(
+                  "Modifié !!",
+                  "Ce message a été mis à jour",
+                  "success"
+                );
+                let updatePost = new FormData();
+                if (this.newContent !== null) {
+                  updatePost.append("content", this.newContent);
+                }
+                let config = {
+                  headers: {
+                    authorization: "Bearer: " + this.token,
+                    "Content-Type": "application/form-data",
+                  },
+                };
+                let id = this.post.id;
+                axios
+                  .patch(
+                    `http://localhost:3000/api/feed/${id}`,
+                    updatePost,
+                    config
+                  )
+                  .then(() => {
+                    this.$emit("get-all-posts");
+                  })
+                  .catch((e) => {
+                    console.error("erreur : " + e);
+                  });
+              }
+            });
+        } else if (res.value === false) {
+          this.$swal("Supprimé !!", "Le message a bien été retiré", "error");
+          this.deletePost(postId);
+        }
+      });
+    },
+    async modifyPost(postId) {
+      console.log("le post " + postId + " est modifié !");
+      let updatePost = new FormData();
+      if (this.newImage !== null) {
+        updatePost.append("image", this.newImage);
+      }
+      if (this.newContent !== null) {
+        updatePost.append("username", this.newContent);
+      }
+      let config = {
+        headers: {
+          authorization: "Bearer: " + this.token,
+          "Content-Type": "application/form-data",
+        },
+      };
+      let id = this.user.userId;
+      await axios
+        .patch(`http://localhost:3000/api/feed/${id}`, updatePost, config)
+        .then(() => {
+          this.$emit("get-all-posts");
+          console.log("j'ai fais remonté à feed");
+        })
+        .catch((e) => {
+          console.error("erreur : " + e);
+        });
+    },
+    deletePost(postId) {
+      let config = {
+        headers: {
+          authorization: `Bearer: ${this.token}`,
+        },
+      };
+      axios
+        .delete(`http://localhost:3000/api/feed/${postId}`, config)
+        .then(() => {
+          this.$emit("get-all-posts");
+        })
+        .catch((error) => {
+          console.log({ error });
+        });
+    },
     toggle() {
       if (this.isDisplay) {
         this.isDisplay = false;

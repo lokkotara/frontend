@@ -5,7 +5,12 @@
       <Publish @get-all-posts="getAllPosts" />
       <h1>Fil d'actualité</h1>
       <article class="postArticle" v-for="post in allPosts" :key="post.id">
-        <Post :post="post" :likes="post.likes" :commentsProps="post.comments" />
+        <Post
+          :post="post"
+          :likes="post.likes"
+          :commentsProps="post.comments"
+          @get-all-posts="getAllPosts"
+        />
         <Comments :postId="post" @get-all-posts="getAllPosts" />
       </article>
     </main>

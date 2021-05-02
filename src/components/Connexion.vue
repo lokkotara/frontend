@@ -50,7 +50,7 @@
             @click="login"
             value="Se connecter"
           />
-          <span class="reset">Mot de passe oublié ?</span>
+          <!-- <span class="reset">Mot de passe oublié ?</span> -->
         </template>
         <template id="inscription" v-else>
           <label for="username"> Pseudonyme </label>
@@ -94,7 +94,7 @@
             @click="signup"
             value="S'inscrire"
           />
-          <span class="go">Bienvenue sur le réseau</span>
+          <!-- <span class="go">Bienvenue sur le réseau</span> -->
         </template>
       </div>
     </div>
