@@ -4,19 +4,12 @@
       v-model="message"
       placeholder="Que voulez-vous partagez... ?"
     ></textarea>
+    <img :src="image" alt="" />
     <div class="optionWrapper">
       <span class="fas fa-grin-beam"></span>
-      <span class="fas fa-paperclip" @click="onPickFile"></span>
-      <input
-        type="file"
-        style="display: none"
-        ref="fileInput"
-        accept="image/jpeg, image/jpg, image/png,"
-        @change="onFilePicked"
-      />
+      <span class="fas fa-paperclip" @click="getImage"></span>
       <span class="fas fa-chevron-right validate" @click="send"></span>
     </div>
-    <img src="image" alt="" />
   </div>
 </template>
 
@@ -31,18 +24,21 @@ export default {
     };
   },
   methods: {
-    onPickFile() {
-      this.$refs.fileInput.click();
-    },
-    onFilePicked(event) {
-      const files = event.target.files;
-      // let filename = files[0].name;
-      const fileReader = new FileReader();
-      fileReader.addEventListener("load", () => {
-        this.imageUrl = fileReader.result;
+    async getImage() {
+      const { value: imagePost } = await this.$swal.fire({
+        title: "Choisissez une image",
+        input: "file",
+        inputAttributes: {
+          accept: "image/jpg, image/jpeg, image/png",
+          "aria-label": "Upload your profile picture",
+        },
       });
-      fileReader.readAsDataURL(files[0]);
-      this.image = files[0];
+      if (imagePost) {
+        const reader = new FileReader();
+        reader.readAsDataURL(imagePost);
+        this.image = imagePost;
+      }
+      this.$swal("Une image a été ajouté!!", "", "success");
     },
     async send() {
       let user = JSON.parse(localStorage.getItem("user"));
@@ -73,9 +69,6 @@ export default {
           console.error("erreur : " + e);
         });
     },
-  },
-  mounter() {
-    this.say();
   },
 };
 </script>
