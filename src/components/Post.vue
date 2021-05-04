@@ -37,8 +37,13 @@
       </div>
     </header>
     <div class="content">
-      <p>{{ post.content }}</p>
-      <img :src="post.image" alt="image de contenu" class="imagePost" />
+      <p v-if="post.content !== null">{{ post.content }}</p>
+      <img
+        :src="post.image"
+        alt="image de contenu"
+        class="imagePost"
+        v-if="post.image !== null"
+      />
     </div>
     <footer>
       <div class="numbers" @click="toggle">
@@ -138,7 +143,7 @@ export default {
         showLoaderOnConfirm: true,
       }).then(async (res) => {
         if (res.value) {
-          this.newContent = await this.$swal
+          await this.$swal
             .fire({
               title: "Changer le contenu",
               input: "textarea",
@@ -150,7 +155,10 @@ export default {
               denyButtonText: "Modifier le post",
             })
             .then(async (res) => {
-              this.newContent = res.value;
+              if (res.value.length !== 0) {
+                this.newContent = res.value;
+                console.log("greg" + res.value.length + "Florand");
+              }
               if (res.isConfirmed) {
                 const { value: image } = await this.$swal.fire({
                   title: "Select image",
@@ -166,7 +174,7 @@ export default {
                   reader.readAsDataURL(image);
                   this.newImage = image;
                 }
-                this.newContent = res.value;
+                // this.newContent = res.value;
                 this.$swal(
                   "Modifié !!",
                   "Ce message a été mis à jour",
@@ -177,6 +185,7 @@ export default {
                   updatePost.append("image", this.newImage);
                 }
                 if (this.newContent !== null) {
+                  console.log("contenu l.187 : " + this.newContent);
                   updatePost.append("content", this.newContent);
                 }
                 let config = {
@@ -199,7 +208,7 @@ export default {
                     console.error("erreur : " + e);
                   });
               } else if (res.isDenied) {
-                this.newContent = res.value;
+                // this.newContent = res.value;
                 this.$swal(
                   "Modifié !!",
                   "Ce message a été mis à jour",
@@ -383,7 +392,7 @@ export default {
 .content {
   width: 100%;
   background-color: white;
-  padding: 0 1.5rem;
+  padding: 1.5rem 1.5rem 0;
   display: flex;
   flex-direction: column;
   p {

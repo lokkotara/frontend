@@ -1,14 +1,13 @@
 <template>
   <div class="publish">
-    <textarea
-      v-model="message"
-      placeholder="Que voulez-vous partagez... ?"
-    ></textarea>
-    <img :src="image" alt="" />
     <div class="optionWrapper">
-      <span class="fas fa-grin-beam"></span>
-      <span class="fas fa-paperclip" @click="getImage"></span>
-      <span class="fas fa-chevron-right validate" @click="send"></span>
+      <span class="fas fa-paragraph" @click="getContent">Texte</span>
+      <span class="fas fa-paperclip" @click="getImage">Image</span>
+      <span class="fas fa-chevron-right validate" @click="send">Publiez</span>
+    </div>
+    <div class="content">
+      <p>{{ message }}</p>
+      <img :src="newImage" alt="" class="imagePost" />
     </div>
   </div>
 </template>
@@ -19,11 +18,26 @@ export default {
   name: "Publish",
   data() {
     return {
-      message: "",
+      message: null,
       image: null,
+      newImage: null,
+      content: null,
     };
   },
   methods: {
+    async getContent() {
+      const { value: contentPost } = await this.$swal.fire({
+        title: "Charger le contenu",
+        input: "textarea",
+        inputPlaceholder: "Modifiez votre post ici",
+        showCloseButton: true,
+        confirmButtonText: "Ajouter le texte",
+      });
+      if (contentPost) {
+        console.log("contentPost : " + contentPost);
+        this.message = contentPost;
+      }
+    },
     async getImage() {
       const { value: imagePost } = await this.$swal.fire({
         title: "Choisissez une image",
@@ -35,17 +49,23 @@ export default {
       });
       if (imagePost) {
         const reader = new FileReader();
+        reader.onload = (e) => {
+          this.newImage = e.target.result;
+        };
         reader.readAsDataURL(imagePost);
         this.image = imagePost;
       }
-      this.$swal("Une image a été ajouté!!", "", "success");
     },
     async send() {
       let user = JSON.parse(localStorage.getItem("user"));
       this.token = user.token;
       let newPost = new FormData();
-      newPost.append("content", this.message);
-      newPost.append("image", this.image);
+      if (this.message !== null) {
+        newPost.append("content", this.message);
+      }
+      if (this.newImage !== null) {
+        newPost.append("image", this.image);
+      }
       let config = {
         headers: {
           authorization: "Bearer: " + this.token,
@@ -64,6 +84,7 @@ export default {
         })
         .then(() => {
           this.message = null;
+          this.newImage = null;
         })
         .catch((e) => {
           console.error("erreur : " + e);
@@ -85,22 +106,16 @@ export default {
   width: 90%;
   max-width: 80rem;
   display: flex;
+  flex-direction: column;
   border-radius: 25px;
   padding: 0.5rem;
-  textarea {
-    height: 16rem;
-    width: 100%;
-    border-radius: 20px 0 0 20px;
-    flex: 1;
-    padding-left: 2rem;
-  }
   .optionWrapper {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    width: 7rem;
-    height: 100%;
+    // flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    width: 100%;
+    // height: 100%;
     position: relative;
     top: 0;
     .fas {
@@ -108,10 +123,25 @@ export default {
       font-size: 2.5rem;
       height: 5rem;
       color: var(--Light-Color);
+      cursor: pointer;
+      &:before {
+        padding-right: 0.5rem;
+      }
     }
   }
-}
-.test {
-  background-color: lightgray;
+  .content {
+    background-color: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 1.5rem;
+    border-radius: 2rem;
+    .imagePost {
+      max-width: 100%;
+      align-self: center;
+      border-radius: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
 }
 </style>
