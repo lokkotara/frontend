@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     getUser() {
-      this.user = JSON.parse(localStorage.getItem("user"));
+      this.user = JSON.parse(sessionStorage.getItem("user"));
       let token = this.user.token;
       let userId = this.user.userId;
       let config = {
@@ -60,7 +60,7 @@ export default {
         });
     },
     logout() {
-      localStorage.clear();
+      sessionStorage.clear();
       this.$router.push("/");
     },
   },

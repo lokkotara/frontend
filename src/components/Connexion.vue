@@ -147,7 +147,7 @@ export default {
         .post("http://localhost:3000/api/auth/login", User)
         .then((res) => {
           if (res.status === 200) {
-            localStorage.setItem("user", JSON.stringify(res.data));
+            sessionStorage.setItem("user", JSON.stringify(res.data));
             this.$router.push("/feed");
           }
         })

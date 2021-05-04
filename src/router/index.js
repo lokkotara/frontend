@@ -12,7 +12,7 @@ const routes = [
     name: "Profile",
     component: () => import("../views/Profile.vue"),
     beforeEnter(to, from, next) {
-      let user = JSON.parse(localStorage.getItem("user"));
+      let user = JSON.parse(sessionStorage.getItem("user"));
       if (user !== null) {
         console.log("authentifié !");
         next();
@@ -26,7 +26,7 @@ const routes = [
     name: "UserProfile",
     component: () => import("../views/UserProfile.vue"),
     beforeEnter(to, from, next) {
-      let user = JSON.parse(localStorage.getItem("user"));
+      let user = JSON.parse(sessionStorage.getItem("user"));
       if (user !== null) {
         next();
       } else {
@@ -39,7 +39,7 @@ const routes = [
     name: "Feed",
     component: () => import("../views/Feed.vue"),
     beforeEnter(to, from, next) {
-      let user = JSON.parse(localStorage.getItem("user"));
+      let user = JSON.parse(sessionStorage.getItem("user"));
       if (user !== null) {
         next();
       } else {

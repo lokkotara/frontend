@@ -33,7 +33,16 @@
           :class="{ active: isLiked }"
           @click="isItLiked, likePost(post.id)"
         ></span>
-        <span class="fas fa-ellipsis-h" @click="showAlert(post.id)"></span>
+        <span
+          v-if="post.User.id === userId"
+          class="fas fa-ellipsis-h"
+          @click="showAlert(post.id)"
+        ></span>
+        <span
+          v-else-if="isAdmin === true"
+          class="fas fa-trash-alt"
+          @click="adminAlert(post.id)"
+        ></span>
       </div>
     </header>
     <div class="content">
@@ -72,20 +81,26 @@
               />
             </router-link>
             <span class="comment">
-              <span class="dateComment">
-                <router-link
-                  :to="{
-                    name: 'UserProfile',
-                    params: { id: comment.User.id },
-                  }"
-                >
-                  <span class="usernameComment">
-                    {{ comment.User.username }}
-                  </span>
-                </router-link>
-                {{ moment(comment.createdAt).fromNow() }}</span
-              >
-              <span class="contentComment">{{ comment.content }}</span>
+              <span class="test">
+                <span class="dateComment">
+                  <router-link
+                    :to="{
+                      name: 'UserProfile',
+                      params: { id: comment.User.id },
+                    }"
+                  >
+                    <span class="usernameComment">
+                      {{ comment.User.username }}
+                    </span>
+                  </router-link>
+                  {{ moment(comment.createdAt).fromNow() }}</span
+                ><span
+                  v-if="comment.User.id === userId || isAdmin === true"
+                  @click="deleteComment(comment.id)"
+                  class="fas fa-times"
+                ></span>
+              </span>
+              <span class="contentComment">{{ comment.content }} </span>
             </span>
           </div>
         </div>
@@ -128,6 +143,14 @@ export default {
       type: Object,
       required: true,
     },
+    isAdmin: {
+      type: Boolean,
+      required: true,
+    },
+    userId: {
+      type: Number,
+      required: true,
+    },
   },
   methods: {
     async showAlert(postId) {
@@ -157,7 +180,6 @@ export default {
             .then(async (res) => {
               if (res.value.length !== 0) {
                 this.newContent = res.value;
-                console.log("greg" + res.value.length + "Florand");
               }
               if (res.isConfirmed) {
                 const { value: image } = await this.$swal.fire({
@@ -174,18 +196,19 @@ export default {
                   reader.readAsDataURL(image);
                   this.newImage = image;
                 }
-                // this.newContent = res.value;
-                this.$swal(
-                  "Modifié !!",
-                  "Ce message a été mis à jour",
-                  "success"
-                );
+                this.$swal({
+                  title: "Modifié !!",
+                  text: "Ce message a été mis à jour",
+                  icon: "success",
+                  position: "top-end",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
                 let updatePost = new FormData();
                 if (this.newImage !== null) {
                   updatePost.append("image", this.newImage);
                 }
                 if (this.newContent !== null) {
-                  console.log("contenu l.187 : " + this.newContent);
                   updatePost.append("content", this.newContent);
                 }
                 let config = {
@@ -208,12 +231,14 @@ export default {
                     console.error("erreur : " + e);
                   });
               } else if (res.isDenied) {
-                // this.newContent = res.value;
-                this.$swal(
-                  "Modifié !!",
-                  "Ce message a été mis à jour",
-                  "success"
-                );
+                this.$swal({
+                  title: "Modifié !!",
+                  text: "Ce message a été mis à jour",
+                  icon: "success",
+                  position: "top-end",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
                 let updatePost = new FormData();
                 if (this.newContent !== null) {
                   updatePost.append("content", this.newContent);
@@ -240,35 +265,61 @@ export default {
               }
             });
         } else if (res.value === false) {
-          this.$swal("Supprimé !!", "Le message a bien été retiré", "error");
+          this.$swal({
+            title: "Supprimé !!",
+            text: "Le message a bien été retiré",
+            icon: "error",
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 1500,
+          });
           this.deletePost(postId);
         }
       });
     },
-    async modifyPost(postId) {
-      console.log("le post " + postId + " est modifié !");
-      let updatePost = new FormData();
-      if (this.newImage !== null) {
-        updatePost.append("image", this.newImage);
-      }
-      if (this.newContent !== null) {
-        updatePost.append("username", this.newContent);
-      }
+    adminAlert(postId) {
+      this.$swal
+        .fire({
+          title: "Etes-vous sûr?",
+          text: "Vous ne pourrez plus revenir en arrière!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "var(--Primary-Color)",
+          cancelButtonColor: "var(--Secondary-Color-Alt)",
+          confirmButtonText: "Oui, je suis sûr!",
+          cancelButtonText: "En fait, non.",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.$swal.fire({
+              position: "top-end",
+              title: "Supprimé !",
+              text: "Le post a été correctement supprimé.",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            this.deletePost(postId);
+          }
+        });
+    },
+    deleteComment(commentId) {
+      console.log("commentaire supprimé !");
       let config = {
         headers: {
-          authorization: "Bearer: " + this.token,
-          "Content-Type": "application/form-data",
+          authorization: `Bearer: ${this.token}`,
         },
       };
-      let id = this.user.userId;
-      await axios
-        .patch(`http://localhost:3000/api/feed/${id}`, updatePost, config)
+      axios
+        .delete(
+          `http://localhost:3000/api/feed/${this.post.id}/comment/${commentId}`,
+          config
+        )
         .then(() => {
           this.$emit("get-all-posts");
-          console.log("j'ai fais remonté à feed");
         })
-        .catch((e) => {
-          console.error("erreur : " + e);
+        .catch((error) => {
+          console.log({ error });
         });
     },
     deletePost(postId) {
@@ -304,7 +355,7 @@ export default {
     },
     likePost(id) {
       let bodyLike = this.isItLiked();
-      let user = JSON.parse(localStorage.getItem("user"));
+      let user = JSON.parse(sessionStorage.getItem("user"));
       this.token = user.token;
       let config = {
         headers: {
@@ -329,7 +380,8 @@ export default {
         });
     },
     getLike() {
-      let user = JSON.parse(localStorage.getItem("user"));
+      let user = JSON.parse(sessionStorage.getItem("user"));
+      console.log(user);
       this.token = user.token;
       let config = {
         headers: {
@@ -348,9 +400,6 @@ export default {
         });
     },
     displayLiked() {
-      let user = JSON.parse(localStorage.getItem("user"));
-      this.token = user.token;
-      this.userId = user.userId;
       let config = {
         headers: {
           authorization: "Bearer: " + this.token,
@@ -439,6 +488,11 @@ header {
     .fa-ellipsis-h {
       font-size: 2rem;
     }
+    .fa-trash-alt {
+      font-size: 2.5rem;
+      color: var(--Secondary-Color-Alt);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
     .fa-heart {
       font-size: 3rem;
       color: #d6bcbc;
@@ -486,6 +540,17 @@ footer {
       height: 6rem;
     }
   }
+  .test {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff2f2;
+    .fa-times {
+      padding: 0 0.5rem;
+      color: var(--Secondary-Color-Alt);
+      cursor: pointer;
+    }
+  }
   .comment {
     font-size: 1.6rem;
     display: flex;
@@ -498,7 +563,6 @@ footer {
     }
     .dateComment {
       font-size: 1.2rem;
-      background-color: #fff2f2;
       font-style: italic;
       display: flex;
       align-items: center;
@@ -507,6 +571,8 @@ footer {
     .contentComment {
       padding: 1rem;
       flex: 1;
+      display: flex;
+      justify-content: space-between;
     }
   }
 }

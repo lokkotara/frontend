@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     getProfileUser() {
-      this.user = JSON.parse(localStorage.getItem("user"));
+      this.user = JSON.parse(sessionStorage.getItem("user"));
       let token = this.user.token;
       // let id = $route.params.id;
       let config = {

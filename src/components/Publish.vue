@@ -57,7 +57,7 @@ export default {
       }
     },
     async send() {
-      let user = JSON.parse(localStorage.getItem("user"));
+      let user = JSON.parse(sessionStorage.getItem("user"));
       this.token = user.token;
       let newPost = new FormData();
       if (this.message !== null) {

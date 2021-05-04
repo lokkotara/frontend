@@ -171,7 +171,7 @@ export default {
       }
     },
     async modifyUser() {
-      let user = JSON.parse(localStorage.getItem("user"));
+      let user = JSON.parse(sessionStorage.getItem("user"));
       this.token = user.token;
       let updateUser = new FormData();
       if (this.newImage !== null) {
@@ -215,7 +215,7 @@ export default {
         });
     },
     getProfileUser() {
-      this.user = JSON.parse(localStorage.getItem("user"));
+      this.user = JSON.parse(sessionStorage.getItem("user"));
       let token = this.user.token;
       let userId = this.user.userId;
       let config = {
@@ -241,7 +241,7 @@ export default {
         });
     },
     deleteProfileUser() {
-      this.user = JSON.parse(localStorage.getItem("user"));
+      this.user = JSON.parse(sessionStorage.getItem("user"));
       let token = this.user.token;
       let userId = this.user.userId;
       let config = {

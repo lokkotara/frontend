@@ -8,6 +8,8 @@
         <Post
           :post="post"
           :likes="post.likes"
+          :isAdmin="isAdmin"
+          :userId="userId"
           :commentsProps="post.comments"
           @get-all-posts="getAllPosts"
         />
@@ -49,7 +51,7 @@ export default {
   },
   methods: {
     getAllPosts() {
-      let user = JSON.parse(localStorage.getItem("user"));
+      let user = JSON.parse(sessionStorage.getItem("user"));
       this.token = user.token;
       this.userId = user.userId;
       this.isAdmin = user.isAdmin;
