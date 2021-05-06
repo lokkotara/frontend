@@ -193,19 +193,20 @@ export default {
                     "aria-label": "Upload your profile picture",
                   },
                 });
-                console.log("file : " + image);
                 if (image) {
                   const reader = new FileReader();
                   reader.readAsDataURL(image);
                   this.newImage = image;
                 }
                 this.$swal({
+                  toast: true,
                   title: "Modifié !!",
                   text: "Ce message a été mis à jour",
                   icon: "success",
                   position: "top-end",
                   showConfirmButton: false,
                   timer: 1500,
+                  timerProgressBar: true,
                 });
                 let updatePost = new FormData();
                 if (this.newImage !== null) {
@@ -235,12 +236,14 @@ export default {
                   });
               } else if (res.isDenied) {
                 this.$swal({
+                  toast: true,
                   title: "Modifié !!",
                   text: "Ce message a été mis à jour",
                   icon: "success",
                   position: "top-end",
                   showConfirmButton: false,
                   timer: 1500,
+                  timerProgressBar: true,
                 });
                 let updatePost = new FormData();
                 if (this.newContent !== null) {
@@ -269,12 +272,14 @@ export default {
             });
         } else if (res.value === false) {
           this.$swal({
+            toast: true,
             title: "Supprimé !!",
             text: "Le message a bien été retiré",
             icon: "error",
             position: "top-end",
             showConfirmButton: false,
             timer: 1500,
+            timerProgressBar: true,
           });
           this.deletePost(postId);
         }
@@ -295,6 +300,7 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             this.$swal.fire({
+              toast: true,
               position: "top-end",
               title: "Supprimé !",
               text: "Le post a été correctement supprimé.",

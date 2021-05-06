@@ -62,6 +62,15 @@ export default {
     logout() {
       sessionStorage.clear();
       this.$router.push("/");
+      this.$swal.fire({
+        toast: true,
+        position: "top-end",
+        title: "Déconnecté !",
+        text: "A bientôt",
+        icon: "info",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     },
   },
   beforeMount() {

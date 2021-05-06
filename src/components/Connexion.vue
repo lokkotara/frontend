@@ -33,11 +33,14 @@
           <span v-if="emailError" class="errorMsg"
             >L'adresse mail n'a pas le bon format</span
           >
-          <label for="password"> Mot de passe</label>
+          <span>
+            <label for="password"> Mot de passe</label
+            ><i :class="isMasked" @click="maskPassword"></i>
+          </span>
           <input
             v-model="password"
             @keyup.enter="login"
-            type="text"
+            :type="type"
             id="password"
             placeholder="Votre mot de passe"
           />
@@ -50,7 +53,6 @@
             @click="login"
             value="Se connecter"
           />
-          <!-- <span class="reset">Mot de passe oublié ?</span> -->
         </template>
         <template id="inscription" v-else>
           <label for="username"> Pseudonyme </label>
@@ -76,9 +78,12 @@
           <span v-if="emailError" class="errorMsg"
             >Doit respecter le format email et être unique</span
           >
-          <label for="password"> Mot de passe</label>
+          <span>
+            <label for="password"> Mot de passe</label
+            ><i :class="isMasked" @click="maskPassword"></i>
+          </span>
           <input
-            type="text"
+            :type="type"
             @keyup.enter="signup"
             v-model="password"
             id="password"
@@ -111,9 +116,20 @@ export default {
       email: "",
       password: "",
       image: "",
+      type: "password",
+      isMasked: "fas fa-eye",
     };
   },
   methods: {
+    maskPassword() {
+      if (this.type === "password") {
+        this.type = "text";
+        this.isMasked = "fas fa-eye-slash";
+      } else {
+        this.type = "password";
+        this.isMasked = "fas fa-eye";
+      }
+    },
     showLogin() {
       return (this.onLogin = true);
     },
@@ -149,6 +165,15 @@ export default {
           if (res.status === 200) {
             sessionStorage.setItem("user", JSON.stringify(res.data));
             this.$router.push("/feed");
+            this.$swal.fire({
+              toast: true,
+              position: "top-end",
+              title: "Connecté !",
+              text: "Bienvenue",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
+            });
           }
         })
         .catch((e) => {
@@ -187,6 +212,12 @@ export default {
 }
 .rightPart {
   justify-content: center;
+  .fa-eye,
+  .fa-eye-slash {
+    color: var(--Primary-Color-Alt);
+    align-self: center;
+    padding-left: 1rem;
+  }
   header {
     display: flex;
     font-weight: 800;

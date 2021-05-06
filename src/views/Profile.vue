@@ -174,7 +174,7 @@ export default {
     async changePassword() {
       this.$swal({
         title: "Changer de mot de passe",
-        input: "text",
+        input: "password",
         inputPlaceholder: "Entrer votre mot de passe actuel",
       }).then(async (res) => {
         if (res.value) {
@@ -192,7 +192,7 @@ export default {
               if (res.status === 200) {
                 this.$swal({
                   title: "Changer de mot de passe",
-                  input: "text",
+                  input: "password",
                   inputPlaceholder: "Entrer votre nouveau mot de passe",
                 }).then((res) => {
                   if (res.value) {
@@ -211,6 +211,7 @@ export default {
                       update,
                       config
                     );
+                    this.success();
                   }
                 });
               }
@@ -258,11 +259,27 @@ export default {
             this.newEmail = null;
             this.getProfileUser();
             this.$refs.header.getUser();
+            this.success();
           }
         })
         .catch((e) => {
           console.error("erreur : " + e);
         });
+    },
+    async success() {
+      const Toast = this.$swal({
+        toast: true,
+        icon: "success",
+        title: "Modifié !",
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      });
+      await Toast.fire({
+        icon: "success",
+        title: "Success",
+      });
     },
     getProfileUser() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
@@ -299,13 +316,37 @@ export default {
           authorization: `Bearer: ${token}`,
         },
       };
-      axios
-        .delete(`http://localhost:3000/api/auth/profil/${userId}`, config)
-        .then(() => {
-          this.$refs.header.logout();
+      this.$swal
+        .fire({
+          title: "Etes-vous sûr?",
+          text: "Vous ne pourrez plus revenir en arrière!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "var(--Primary-Color)",
+          cancelButtonColor: "var(--Secondary-Color-Alt)",
+          confirmButtonText: "Oui, je suis sûr!",
+          cancelButtonText: "En fait, non.",
         })
-        .catch((error) => {
-          console.log({ error });
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.$swal.fire({
+              toast: true,
+              position: "top-end",
+              title: "Supprimé !",
+              text: "supprimé.",
+              icon: "info",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            axios
+              .delete(`http://localhost:3000/api/auth/profil/${userId}`, config)
+              .then(() => {
+                this.$refs.header.logout();
+              })
+              .catch((error) => {
+                console.log({ error });
+              });
+          }
         });
     },
   },
@@ -316,7 +357,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "~@sweetalert2/theme-borderless/borderless.scss";
 .mainProfile {
   background-image: url(../assets/ville.jpg);
   display: flex;
