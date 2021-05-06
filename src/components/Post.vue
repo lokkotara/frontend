@@ -24,7 +24,9 @@
               {{ post.User.username }}
             </span>
           </router-link>
-          <span class="date">{{ moment(post.createdAt).fromNow() }}</span>
+          <span class="date">{{
+            moment(post.createdAt).fromNow(currentTime)
+          }}</span>
         </div>
       </div>
       <div class="icons">
@@ -93,7 +95,7 @@
                       {{ comment.User.username }}
                     </span>
                   </router-link>
-                  {{ moment(comment.createdAt).fromNow() }}</span
+                  {{ moment(comment.createdAt).fromNow(currentTime) }}</span
                 ><span
                   v-if="comment.User.id === userId || isAdmin === true"
                   @click="deleteComment(comment.id)"
@@ -125,6 +127,7 @@ export default {
       like: [],
       newContent: null,
       newImage: null,
+      currentTime: "",
     };
   },
   computed: {
@@ -419,10 +422,18 @@ export default {
           console.error(error);
         });
     },
+    setInterval() {
+      setInterval(() => {
+        this.currentTime = new Date().toLocaleTimeString();
+      }, 60000);
+    },
   },
   mounted() {
     this.getLike();
     this.displayLiked();
+  },
+  created() {
+    this.setInterval();
   },
 };
 </script>

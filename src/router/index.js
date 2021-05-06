@@ -11,40 +11,24 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: () => import("../views/Profile.vue"),
-    beforeEnter(to, from, next) {
-      let user = JSON.parse(sessionStorage.getItem("user"));
-      if (user !== null) {
-        console.log("authentifié !");
-        next();
-      } else {
-        next({ name: "Home" });
-      }
+    meta: {
+      requireAuth: true,
     },
   },
   {
     path: "/profile/:id",
     name: "UserProfile",
     component: () => import("../views/UserProfile.vue"),
-    beforeEnter(to, from, next) {
-      let user = JSON.parse(sessionStorage.getItem("user"));
-      if (user !== null) {
-        next();
-      } else {
-        next({ name: "Home" });
-      }
+    meta: {
+      requireAuth: true,
     },
   },
   {
     path: "/feed",
     name: "Feed",
     component: () => import("../views/Feed.vue"),
-    beforeEnter(to, from, next) {
-      let user = JSON.parse(sessionStorage.getItem("user"));
-      if (user !== null) {
-        next();
-      } else {
-        next({ name: "Home" });
-      }
+    meta: {
+      requireAuth: true,
     },
   },
 ];
@@ -52,6 +36,21 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((route) => route.meta.requireAuth)) {
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    if (user !== null) {
+      next();
+    } else {
+      next({
+        name: "Home",
+      });
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

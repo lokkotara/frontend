@@ -111,11 +111,9 @@ export default {
   padding: 0.5rem;
   .optionWrapper {
     display: flex;
-    // flex-direction: column;
     justify-content: space-around;
     align-items: flex-start;
     width: 100%;
-    // height: 100%;
     position: relative;
     top: 0;
     .fas {
@@ -126,6 +124,10 @@ export default {
       cursor: pointer;
       &:before {
         padding-right: 0.5rem;
+      }
+      &:hover {
+        text-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
+          0 6px 6px rgba(0, 0, 0, 0.23);
       }
     }
   }

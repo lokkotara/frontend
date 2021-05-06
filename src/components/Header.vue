@@ -99,6 +99,7 @@ export default {
     font-size: 3rem;
     font-family: "Karla", Arial, sans-serif;
     font-weight: 800;
+    display: none;
   }
   img {
     width: 7rem;
@@ -149,7 +150,8 @@ export default {
   }
 }
 @media screen and(min-width:768px) {
-  .logoLong {
+  .logoLong,
+  .profileBtn .pseudo {
     display: block;
   }
   .logoShort {

@@ -159,7 +159,7 @@ export default {
 };
 </script>
 
-<style scope lang="scss">
+<style lang="scss">
 .mainWrapper {
   display: flex;
   flex-wrap: wrap;

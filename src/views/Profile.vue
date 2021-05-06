@@ -3,7 +3,7 @@
     <Header :user="user" ref="header" />
     <main class="mainProfile">
       <div class="profile">
-        <div class="leftPart">
+        <div class="leftPartProfile">
           <p class="title">Modification</p>
           <span class="inputWrapper">
             <span class="btn inputBtn" @click="getUsername">Pseudonyme</span>
@@ -64,11 +64,11 @@
             ></i
           ></span>
         </div>
-        <div class="rightPart">
+        <div class="rightPartProfile">
           <p class="title">Actions</p>
           <span class="fas fa-cog inputBtn" @click="changePassword"
-            >Nouveau mot de passe</span
-          >
+            >Nouveau mot de passe{{ newPassword }}
+          </span>
           <span class="fas fa-clipboard-check inputBtn" @click="modifyUser"
             >Valider les changements</span
           >
@@ -110,6 +110,8 @@ export default {
       bio: "",
       newBio: null,
       password: "",
+      oldPassword: "",
+      newPassword: "",
       createdAt: "",
     };
   },
@@ -169,6 +171,61 @@ export default {
         console.log(file);
         this.newImage = file;
       }
+    },
+    async changePassword() {
+      this.$swal({
+        title: "Changer de mot de passe",
+        input: "text",
+        inputPlaceholder: "Entrer votre mot de passe actuel",
+      }).then(async (res) => {
+        if (res.value) {
+          let user = JSON.parse(sessionStorage.getItem("user"));
+          this.token = user.token;
+          this.oldPassword = res.value;
+          console.log("ancien mot de passe | " + this.oldPassword);
+          let User = {
+            username: this.username,
+            email: this.email,
+            password: this.oldPassword,
+          };
+          await axios
+            .post("http://localhost:3000/api/auth/login", User)
+            .then((res) => {
+              if (res.status === 200) {
+                console.log("même utilisateur");
+                this.$swal({
+                  title: "Changer de mot de passe",
+                  input: "text",
+                  inputPlaceholder: "Entrer votre nouveau mot de passe",
+                }).then((res) => {
+                  if (res.value) {
+                    this.newPassword = res.value;
+                    console.log(this.newPassword);
+                    let content = {
+                      password: this.newPassword,
+                    };
+                    let config = {
+                      headers: {
+                        authorization: "Bearer: " + this.token,
+                        "Content-Type": "application/form-data",
+                      },
+                    };
+                    console.log("newPassword | " + this.newPassword);
+                    let id = this.user.userId;
+                    axios.patch(
+                      `http://localhost:3000/api/auth/profil/${id}`,
+                      content,
+                      config
+                    );
+                  }
+                });
+              }
+            })
+            .catch((e) => {
+              console.error("erreur : " + e);
+            });
+        }
+      });
     },
     async modifyUser() {
       let user = JSON.parse(sessionStorage.getItem("user"));
@@ -275,30 +332,29 @@ export default {
   justify-content: space-between;
   .profile {
     display: flex;
+    flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
-    margin: 5rem 0;
+    margin: 5rem 0 0 0;
     padding: 2.5rem;
     border-radius: 25px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
     background-color: var(--Light-Color);
     width: 100%;
-    height: 70vh;
     .title {
       color: var(--Dark-Color);
       justify-content: center;
     }
     .inputBtn {
-      // flex: 1;
       text-align: center;
     }
-    .leftPart {
+    .leftPartProfile {
       flex: 1;
-      height: 100%;
+      height: 50rem;
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
-      align-items: flex-start;
+      // align-items: flex-start;
       .title {
         align-self: center;
         font-family: "Karla", sans-serif;
@@ -308,6 +364,7 @@ export default {
       .inputWrapper {
         width: 100%;
         display: flex;
+        flex-direction: column;
         .inputBtn {
           flex: 1;
         }
@@ -318,14 +375,26 @@ export default {
         }
       }
     }
-    .centerPart,
-    .rightPart {
+    .centerPart {
       flex: 1;
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
       align-items: center;
+    }
+    .rightPartProfile {
+      flex: 1;
+      height: 50rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      .inputBtn {
+        width: 100%;
+      }
+      span {
+        text-align: center;
+      }
       .title {
         align-self: center;
         font-family: "Karla", sans-serif;
@@ -365,10 +434,6 @@ export default {
       height: 2rem;
       margin: 1rem 0 2rem 0;
     }
-    p {
-      // width: 80%;
-      display: flex;
-    }
     .fa-times-circle {
       font-size: 2rem;
       color: var(--Secondary-Color-Alt);
@@ -376,7 +441,7 @@ export default {
       cursor: pointer;
     }
   }
-  .rightPart {
+  .rightPartProfile {
     .fa-trash-alt {
       color: var(--Secondary-Color-Alt);
       background-color: var(--Light-Color);
@@ -397,6 +462,7 @@ export default {
   @media screen and (min-width: 1024px) {
     .profile {
       width: 80%;
+      height: 70rem;
       #image::file-selector-button {
         cursor: pointer;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);

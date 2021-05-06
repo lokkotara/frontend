@@ -4,6 +4,10 @@
     <main class="mainFeed">
       <Publish @get-all-posts="getAllPosts" />
       <h1>Fil d'actualité</h1>
+      <p class="defaultText" v-if="allPosts.length === 0">
+        Vous n'avez encore aucun contenu dans le fil d'actualité.
+        <img src="@/assets/defaultContent.jpg" alt="" />
+      </p>
       <article class="postArticle" v-for="post in allPosts" :key="post.id">
         <Post
           :post="post"
@@ -83,6 +87,30 @@ export default {
 .mainFeed {
   background-image: url(../assets/ville.jpg);
   background-attachment: fixed;
+  background-position: center;
+  min-height: 78rem;
+  .defaultText {
+    background-color: rgba(35, 49, 73, 0.972);
+    background-image: linear-gradient(
+      315deg,
+      #4f6791 0%,
+      rgba(35, 49, 73, 0.972) 74%
+    );
+    border-radius: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--Light-Color);
+    padding: 2rem;
+    text-align: center;
+    img {
+      margin-top: 2rem;
+      width: 90%;
+      height: 50rem;
+      object-fit: cover;
+    }
+  }
 }
 .commentLine img {
   object-fit: cover;
