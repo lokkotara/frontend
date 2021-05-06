@@ -67,7 +67,7 @@
         <div class="rightPartProfile">
           <p class="title">Actions</p>
           <span class="fas fa-cog inputBtn" @click="changePassword"
-            >Nouveau mot de passe{{ newPassword }}
+            >Nouveau mot de passe
           </span>
           <span class="fas fa-clipboard-check inputBtn" @click="modifyUser"
             >Valider les changements</span
@@ -168,7 +168,6 @@ export default {
           });
         };
         reader.readAsDataURL(file);
-        console.log(file);
         this.newImage = file;
       }
     },
@@ -182,7 +181,6 @@ export default {
           let user = JSON.parse(sessionStorage.getItem("user"));
           this.token = user.token;
           this.oldPassword = res.value;
-          console.log("ancien mot de passe | " + this.oldPassword);
           let User = {
             username: this.username,
             email: this.email,
@@ -192,7 +190,6 @@ export default {
             .post("http://localhost:3000/api/auth/login", User)
             .then((res) => {
               if (res.status === 200) {
-                console.log("même utilisateur");
                 this.$swal({
                   title: "Changer de mot de passe",
                   input: "text",
@@ -200,21 +197,18 @@ export default {
                 }).then((res) => {
                   if (res.value) {
                     this.newPassword = res.value;
-                    console.log(this.newPassword);
-                    let content = {
-                      password: this.newPassword,
-                    };
+                    let update = new FormData();
+                    update.append("password", this.newPassword);
                     let config = {
                       headers: {
                         authorization: "Bearer: " + this.token,
                         "Content-Type": "application/form-data",
                       },
                     };
-                    console.log("newPassword | " + this.newPassword);
                     let id = this.user.userId;
                     axios.patch(
-                      `http://localhost:3000/api/auth/profil/${id}`,
-                      content,
+                      `http://localhost:3000/api/auth/profil/${id}/password`,
+                      update,
                       config
                     );
                   }
@@ -257,7 +251,6 @@ export default {
           config
         )
         .then((res) => {
-          console.log(res.data.message);
           if (res.status === 200) {
             this.newImage = null;
             this.newUsername = null;

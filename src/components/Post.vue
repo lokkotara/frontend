@@ -384,7 +384,6 @@ export default {
     },
     getLike() {
       let user = JSON.parse(sessionStorage.getItem("user"));
-      console.log(user);
       this.token = user.token;
       let config = {
         headers: {
