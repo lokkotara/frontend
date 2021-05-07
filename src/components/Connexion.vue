@@ -44,9 +44,7 @@
             id="password"
             placeholder="Votre mot de passe"
           />
-          <span v-if="passwordError" class="errorMsg"
-            >Le mot de passe n'a pas le bon format</span
-          >
+          <span v-if="!isCorrect" class="errorMsg">{{ errorMsg }}</span>
           <input
             id="submitBtn"
             type="button"
@@ -93,13 +91,13 @@
             >Doit contenir au moins 8 caractères, dont un chiffre, une majuscule
             et une minuscule</span
           >
+          <span v-if="!isCorrect" class="errorMsg">{{ errorMsg }}</span>
           <input
             id="submitBtn"
             type="submit"
             @click="signup"
             value="S'inscrire"
           />
-          <!-- <span class="go">Bienvenue sur le réseau</span> -->
         </template>
       </div>
     </div>
@@ -118,6 +116,8 @@ export default {
       image: "",
       type: "password",
       isMasked: "fas fa-eye",
+      isCorrect: true,
+      errorMsg: "",
     };
   },
   methods: {
@@ -162,6 +162,7 @@ export default {
       await axios
         .post("http://localhost:3000/api/auth/login", User)
         .then((res) => {
+          console.log(res.status);
           if (res.status === 200) {
             sessionStorage.setItem("user", JSON.stringify(res.data));
             this.$router.push("/feed");
@@ -177,7 +178,15 @@ export default {
           }
         })
         .catch((e) => {
-          console.error("erreur : " + e);
+          if (e.response.status === 401) {
+            this.isCorrect = false;
+            this.errorMsg =
+              "Ces informations sont invalides. Veuillez vérifiez vos identifiants";
+          } else {
+            this.isCorrect = false;
+            this.errorMsg =
+              "Il semble qu'une erreur soit survenue. Veuillez réessayer.";
+          }
         });
     },
   },

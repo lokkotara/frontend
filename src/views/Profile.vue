@@ -267,18 +267,14 @@ export default {
         });
     },
     async success() {
-      const Toast = this.$swal({
+      this.$swal.fire({
         toast: true,
-        icon: "success",
-        title: "Modifié !",
         position: "top-end",
+        title: "Modifié !",
+        // text: "Le post a été correctement supprimé.",
+        icon: "success",
         showConfirmButton: false,
         timer: 1500,
-        timerProgressBar: true,
-      });
-      await Toast.fire({
-        icon: "success",
-        title: "Success",
       });
     },
     getProfileUser() {

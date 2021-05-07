@@ -2,8 +2,8 @@
   <div>
     <Header />
     <main class="mainFeed">
-      <Publish @get-all-posts="getAllPosts" />
-      <h1>Fil d'actualité</h1>
+      <Publish class="publish" @get-all-posts="getAllPosts" />
+      <!-- <h1>Fil d'actualité</h1> -->
       <p class="defaultText" v-if="allPosts.length === 0">
         Vous n'avez encore aucun contenu dans le fil d'actualité.
         <img src="@/assets/defaultContent.jpg" alt="" />
@@ -89,6 +89,9 @@ export default {
   background-attachment: fixed;
   background-position: center;
   min-height: 78rem;
+  .publish {
+    margin-bottom: 10rem;
+  }
   .defaultText {
     background-color: rgba(35, 49, 73, 0.972);
     background-image: linear-gradient(
