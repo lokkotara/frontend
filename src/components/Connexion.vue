@@ -9,71 +9,90 @@
       </div>
     </header>
     <div id="displayForm">
-      <div class="form">
+      <form class="form">
         <template id="connexion" v-if="this.onLogin == true">
-          <label for="username"> Pseudonyme</label>
+          <label for="lUsername"> Pseudonyme</label>
           <input
             type="text"
-            @keyup.enter="login"
-            v-model="username"
-            id="username"
+            @input="checkLUsername"
+            v-model="lUsername"
+            id="lUsername"
             placeholder="Votre nom d'utilisateur"
+            pattern="^[a-zA-Z]{1}[a-zA-Z'À-ÿ -]+$"
+            :class="isLUserValid ? isLUserValid : null"
+            required
           />
-          <span v-if="userError" class="errorMsg"
+          <span v-if="lUserError" class="errorMsg"
             >Le nom d'utilisateur n'a pas le bon format</span
           >
-          <label for="email"> Adresse e-mail</label>
+          <label for="lEmail"> Adresse e-mail</label>
           <input
-            type="text"
-            @keyup.enter="login"
-            v-model="email"
-            id="email"
+            type="email"
+            @input="checkLEmail"
+            v-model="lEmail"
+            id="lEmail"
             placeholder="Votre adresse mail"
+            pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([_\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})"
+            :class="isLEmailValid ? isLEmailValid : null"
+            required
           />
-          <span v-if="emailError" class="errorMsg"
+          <span v-if="lEmailError" class="errorMsg"
             >L'adresse mail n'a pas le bon format</span
           >
           <span>
-            <label for="password"> Mot de passe</label
+            <label for="lPassword"> Mot de passe</label
             ><i :class="isMasked" @click="maskPassword"></i>
           </span>
           <input
-            v-model="password"
-            @keyup.enter="login"
+            v-model="lPassword"
+            @input="checkLPassword"
             :type="type"
-            id="password"
+            id="lPassword"
+            pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*"
             placeholder="Votre mot de passe"
+            :class="isLPasswordValid ? isLPasswordValid : null"
+            required
           />
-          <span v-if="!isCorrect" class="errorMsg">{{ errorMsg }}</span>
+          <span v-if="lPasswordError" class="errorMsg"
+            >Le mot de passe n'a pas le bon format</span
+          >
           <input
             id="submitBtn"
             type="button"
             @click="login"
             value="Se connecter"
           />
+          <span v-if="!isCorrect" class="errorMsg">
+            {{ error.error }}{{ lErrorMsg }}</span
+          >
         </template>
         <template id="inscription" v-else>
           <label for="username"> Pseudonyme </label>
           <input
             type="text"
-            @keyup.enter="signup"
-            v-model="username"
-            id="username"
+            @input="checkRUsername"
+            v-model="rUsername"
+            id="rUsername"
             placeholder="Votre nom d'utilisateur"
-            label="Pseudonyme"
+            pattern="^[a-zA-Z]{1}[a-zA-Z'À-ÿ -]+$"
+            :class="isRUserValid ? isRUserValid : null"
+            required
           />
-          <span v-if="userError" class="errorMsg"
-            >Ne doit pas contenir de caractères spéciaux et être unique</span
+          <span v-if="rUserError" class="errorMsg"
+            >Ne doit contenir que des lettres et être unique</span
           >
           <label for="email"> Adresse e-mail</label>
           <input
-            type="text"
-            @keyup.enter="signup"
-            v-model="email"
-            id="email"
+            type="email"
+            @input="checkREmail"
+            v-model="rEmail"
+            id="rEmail"
             placeholder="Votre adresse mail"
+            pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([_\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})"
+            :class="isREmailValid ? isREmailValid : null"
+            required
           />
-          <span v-if="emailError" class="errorMsg"
+          <span v-if="rEmailError" class="errorMsg"
             >Doit respecter le format email et être unique</span
           >
           <span>
@@ -81,17 +100,20 @@
             ><i :class="isMasked" @click="maskPassword"></i>
           </span>
           <input
+            v-model="rPassword"
+            @input="checkRPassword"
             :type="type"
-            @keyup.enter="signup"
-            v-model="password"
-            id="password"
+            id="rPassword"
+            pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*"
             placeholder="Votre mot de passe"
+            :class="isRPasswordValid ? isRPasswordValid : null"
+            required
           />
-          <span v-if="passwordError" class="errorMsg"
+          <span v-if="rPasswordError" class="errorMsg"
             >Doit contenir au moins 8 caractères, dont un chiffre, une majuscule
             et une minuscule</span
           >
-          <span v-if="!isCorrect" class="errorMsg">{{ errorMsg }}</span>
+          <span v-if="!isCorrect" class="errorMsg">{{ rErrorMsg }}</span>
           <input
             id="submitBtn"
             type="submit"
@@ -99,7 +121,7 @@
             value="S'inscrire"
           />
         </template>
-      </div>
+      </form>
     </div>
   </section>
 </template>
@@ -109,18 +131,93 @@ import axios from "axios";
 export default {
   data() {
     return {
+      error: "",
       onLogin: true,
-      username: "",
-      email: "",
-      password: "",
+      lUserError: false,
+      lEmailError: false,
+      lPasswordError: false,
+      rUsername: "",
+      lUsername: "",
+      rEmail: "",
+      lEmail: "",
+      rPassword: "",
+      lPassword: "",
       image: "",
       type: "password",
       isMasked: "fas fa-eye",
+      isValid: null,
+      isRUserValid: null,
+      isLUserValid: null,
+      isLEmailValid: null,
+      isREmailValid: null,
+      isLPasswordValid: null,
+      isRPasswordValid: null,
       isCorrect: true,
-      errorMsg: "",
+      lErrorMsg: "",
+      rErrorMsg: "",
     };
   },
   methods: {
+    checkLUsername() {
+      let lUsername = document.getElementById("lUsername");
+      if (lUsername.validity.valid) {
+        this.lUserError = false;
+        this.isLUserValid = "valid";
+      } else {
+        this.lUserError = true;
+        this.isLUserValid = "invalid";
+      }
+    },
+    checkRUsername() {
+      let rUsername = document.getElementById("rUsername");
+      if (rUsername.validity.valid) {
+        this.rUserError = false;
+        this.isRUserValid = "valid";
+      } else {
+        this.rUserError = true;
+        this.isRUserValid = "invalid";
+      }
+    },
+    checkLEmail() {
+      let lEmail = document.getElementById("lEmail");
+      if (lEmail.validity.valid) {
+        this.lEmailError = false;
+        this.isLEmailValid = "valid";
+      } else {
+        this.lEmailError = true;
+        this.isLEmailValid = "invalid";
+      }
+    },
+    checkREmail() {
+      let rEmail = document.getElementById("rEmail");
+      if (rEmail.validity.valid) {
+        this.rEmailError = false;
+        this.isREmailValid = "valid";
+      } else {
+        this.rEmailError = true;
+        this.isREmailValid = "invalid";
+      }
+    },
+    checkLPassword() {
+      let lPassword = document.getElementById("lPassword");
+      if (lPassword.validity.valid) {
+        this.lPasswordError = false;
+        this.isLPasswordValid = "valid";
+      } else {
+        this.lPasswordError = true;
+        this.isLPasswordValid = "invalid";
+      }
+    },
+    checkRPassword() {
+      let rPassword = document.getElementById("rPassword");
+      if (rPassword.validity.valid) {
+        this.rPasswordError = false;
+        this.isRPasswordValid = "valid";
+      } else {
+        this.rPasswordError = true;
+        this.isRPasswordValid = "invalid";
+      }
+    },
     maskPassword() {
       if (this.type === "password") {
         this.type = "text";
@@ -138,14 +235,17 @@ export default {
     },
     async signup() {
       let newUser = {
-        username: this.username,
-        email: this.email,
-        password: this.password,
+        username: this.rUsername,
+        email: this.rEmail,
+        password: this.rPassword,
       };
       await axios
         .post("http://localhost:3000/api/auth/signup", newUser)
         .then((res) => {
           if (res.status === 201) {
+            this.lUsername = this.rUsername;
+            this.lEmail = this.rEmail;
+            this.lPassword = this.rPassword;
             this.login();
           }
         })
@@ -155,9 +255,9 @@ export default {
     },
     async login() {
       let User = {
-        username: this.username,
-        email: this.email,
-        password: this.password,
+        username: this.lUsername,
+        email: this.lEmail,
+        password: this.lPassword,
       };
       await axios
         .post("http://localhost:3000/api/auth/login", User)
@@ -178,14 +278,13 @@ export default {
           }
         })
         .catch((e) => {
+          this.error = e.response.data;
           if (e.response.status === 401) {
             this.isCorrect = false;
-            this.errorMsg =
-              "Ces informations sont invalides. Veuillez vérifiez vos identifiants";
+            this.lErrorMsg = " Veuillez vérifiez vos identifiants";
           } else {
             this.isCorrect = false;
-            this.errorMsg =
-              "Il semble qu'une erreur soit survenue. Veuillez réessayer.";
+            this.lErrorMsg = "";
           }
         });
     },
@@ -194,6 +293,16 @@ export default {
 </script>
 
 <style lang="scss">
+.valid {
+  outline: solid rgba(144, 201, 154, 0.719);
+  border: 1px solid green;
+  border-radius: 0.5rem;
+}
+.invalid {
+  outline: solid var(--Secondary-Color);
+  border: 1px solid var(--Secondary-Color-Alt);
+  border-radius: 0.5rem;
+}
 .mainWrapper {
   display: flex;
   flex-wrap: wrap;
