@@ -75,6 +75,23 @@
           <span class="btn fas fa-trash-alt inputBtn" @click="deleteProfileUser"
             >Supprimer le compte</span
           >
+          <span v-if="isAdmin" class="btn deleteUser">
+            <select class="select" v-model="selected">
+              <option disabled value="">
+                Sélectionner le compte à supprimer
+              </option>
+              <option
+                :value="{ id: user.id }"
+                v-for="user in users"
+                :key="user.id"
+              >
+                {{ user.username }}
+              </option>
+            </select>
+            <span class="deleteBtn" @click="deleteSelectedUser(selected.id)"
+              >Supprimer</span
+            >
+          </span>
         </div>
       </div>
     </main>
@@ -97,6 +114,8 @@ export default {
       moment: moment,
       emptyMessage: "Aucune image sélectionnée",
       user: [],
+      users: [],
+      selected: "",
       token: "",
       userId: "",
       isAdmin: "",
@@ -280,6 +299,7 @@ export default {
     getProfileUser() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
       let token = this.user.token;
+      this.isAdmin = this.user.isAdmin;
       let userId = this.user.userId;
       let config = {
         headers: {
@@ -301,6 +321,70 @@ export default {
         })
         .catch((error) => {
           console.log({ error });
+        });
+    },
+    getAllUsers() {
+      this.user = JSON.parse(sessionStorage.getItem("user"));
+      let token = this.user.token;
+      let config = {
+        headers: {
+          authorization: `Bearer: ${token}`,
+        },
+      };
+      axios
+        .get(`http://localhost:3000/api/auth/profil`, config)
+        .then((res) => {
+          this.users = res.data;
+          console.log(this.users);
+        })
+        .catch((error) => {
+          console.log({ error });
+        });
+    },
+    deleteSelectedUser() {
+      console.log("Je supprime : " + this.selected.id);
+      this.user = JSON.parse(sessionStorage.getItem("user"));
+      let token = this.user.token;
+      let userId = this.selected.id;
+      let config = {
+        headers: {
+          authorization: `Bearer: ${token}`,
+        },
+      };
+      this.$swal
+        .fire({
+          title: "Etes-vous sûr?",
+          text: "Vous ne pourrez plus revenir en arrière!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "var(--Primary-Color)",
+          cancelButtonColor: "var(--Secondary-Color-Alt)",
+          confirmButtonText: "Oui, je suis sûr!",
+          cancelButtonText: "En fait, non.",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.$swal.fire({
+              toast: true,
+              position: "top-end",
+              title: "Supprimé !",
+              text: "supprimé.",
+              icon: "info",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            axios
+              .delete(`http://localhost:3000/api/auth/profil/${userId}`, config)
+              .then(() => {
+                console.log(
+                  "l'utilisateur numéro " + userId + " a été supprimé !"
+                );
+                this.getAllUsers();
+              })
+              .catch((error) => {
+                console.log({ error });
+              });
+          }
         });
     },
     deleteProfileUser() {
@@ -348,6 +432,7 @@ export default {
   },
   beforeMount() {
     this.getProfileUser();
+    this.getAllUsers();
   },
 };
 </script>
@@ -383,7 +468,6 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
-      // align-items: flex-start;
       .title {
         align-self: center;
         font-family: "Karla", sans-serif;
@@ -504,6 +588,19 @@ export default {
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 1.5rem;
+  }
+  .deleteUser {
+    display: flex;
+    .select {
+      flex: 1;
+    }
+    .deleteBtn {
+      padding: 1rem;
+      margin-left: 0.5rem;
+      color: var(--Light-Color);
+      background-color: var(--Secondary-Color-Alt);
+      border-radius: 0.5rem;
+    }
   }
 }
 </style>

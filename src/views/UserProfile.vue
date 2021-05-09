@@ -15,11 +15,17 @@
           <span class="profileTitle">Biographie</span>
           <span class="profileContent">{{ bio }}</span>
         </p>
+        <span
+          v-if="isAdmin"
+          class="btn fas fa-trash-alt inputBtn"
+          @click="deleteProfileUser"
+          >Supprimer le compte</span
+        >
       </div>
-      <div class="actions">
+      <!-- <div class="actions">
         <span>Ajouter ce profil à mes favoris</span>
         <span class="fas fa-star"></span>
-      </div>
+      </div> -->
     </main>
   </div>
 </template>
@@ -45,9 +51,9 @@ export default {
       id: this.$route.params.id,
       image: avatar,
       username: "",
-      email: "",
+      // email: "",
       bio: "",
-      password: "",
+      // password: "",
       createdAt: "",
     };
   },
@@ -55,6 +61,7 @@ export default {
     getProfileUser() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
       let token = this.user.token;
+      this.isAdmin = this.user.isAdmin;
       // let id = $route.params.id;
       let config = {
         headers: {
@@ -66,9 +73,9 @@ export default {
         .then((res) => {
           let data = res.data;
           this.username = data.username;
-          this.email = data.email;
+          // this.email = data.email;
           this.bio = data.bio;
-          this.password = data.password;
+          // this.password = data.password;
           this.createdAt = data.createdAt;
           if (data.image !== null) {
             this.image = data.image;
@@ -76,6 +83,51 @@ export default {
         })
         .catch((error) => {
           console.log({ error });
+        });
+    },
+    deleteProfileUser() {
+      this.user = JSON.parse(sessionStorage.getItem("user"));
+      let token = this.user.token;
+      // let userId = this.user.userId;
+      let config = {
+        headers: {
+          authorization: `Bearer: ${token}`,
+        },
+      };
+      this.$swal
+        .fire({
+          title: "Etes-vous sûr?",
+          text: "Vous ne pourrez plus revenir en arrière!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "var(--Primary-Color)",
+          cancelButtonColor: "var(--Secondary-Color-Alt)",
+          confirmButtonText: "Oui, je suis sûr!",
+          cancelButtonText: "En fait, non.",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.$swal.fire({
+              toast: true,
+              position: "top-end",
+              title: "Supprimé !",
+              text: "supprimé.",
+              icon: "info",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            axios
+              .delete(
+                `http://localhost:3000/api/auth/profil/${this.id}`,
+                config
+              )
+              .then(() => {
+                this.$router.push("/feed");
+              })
+              .catch((error) => {
+                console.log({ error });
+              });
+          }
         });
     },
   },
@@ -92,7 +144,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 90%;
+  height: 100vh;
   .profile {
     display: flex;
     flex-direction: column;
@@ -103,6 +155,7 @@ export default {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
     background-color: var(--Light-Color);
     width: 100%;
+    height: 90%;
     p {
       width: 80%;
       display: flex;
@@ -127,9 +180,30 @@ export default {
       text-align: center;
     }
   }
+  .fa-trash-alt {
+    color: var(--Secondary-Color-Alt);
+    background-image: linear-gradient(
+      315deg,
+      #4f6791 0%,
+      rgba(35, 49, 73, 0.972) 74%
+    );
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    &:hover {
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+        0 10px 10px rgba(0, 0, 0, 0.22);
+    }
+    &:before {
+      padding: 1rem;
+    }
+  }
   @media screen and (min-width: 1024px) {
     .profile {
       width: 80%;
+      height: 70%;
     }
   }
   .imgProfile {
