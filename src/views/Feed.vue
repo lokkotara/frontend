@@ -3,7 +3,6 @@
     <Header />
     <main class="mainFeed">
       <Publish class="publish" @get-all-posts="getAllPosts" />
-      <!-- <h1>Fil d'actualité</h1> -->
       <p class="defaultText" v-if="allPosts.length === 0">
         Vous n'avez encore aucun contenu dans le fil d'actualité.
         <img

@@ -294,7 +294,6 @@ export default {
         toast: true,
         position: "top-end",
         title: "Modifié !",
-        // text: "Le post a été correctement supprimé.",
         icon: "success",
         showConfirmButton: false,
         timer: 1500,

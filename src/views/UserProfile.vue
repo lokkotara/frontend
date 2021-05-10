@@ -47,9 +47,7 @@ export default {
       id: this.$route.params.id,
       image: avatar,
       username: "",
-      // email: "",
       bio: "",
-      // password: "",
       createdAt: "",
     };
   },
@@ -58,7 +56,6 @@ export default {
       this.user = JSON.parse(sessionStorage.getItem("user"));
       let token = this.user.token;
       this.isAdmin = this.user.isAdmin;
-      // let id = $route.params.id;
       let config = {
         headers: {
           authorization: `Bearer: ${token}`,
@@ -69,9 +66,7 @@ export default {
         .then((res) => {
           let data = res.data;
           this.username = data.username;
-          // this.email = data.email;
           this.bio = data.bio;
-          // this.password = data.password;
           this.createdAt = data.createdAt;
           if (data.image !== null) {
             this.image = data.image;
@@ -84,7 +79,6 @@ export default {
     deleteProfileUser() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
       let token = this.user.token;
-      // let userId = this.user.userId;
       let config = {
         headers: {
           authorization: `Bearer: ${token}`,
@@ -182,13 +176,7 @@ export default {
   }
   .fa-trash-alt {
     color: var(--Light-Color);
-    // background-image: linear-gradient(
-    //   315deg,
-    //   #4f6791 0%,
-    //   rgba(35, 49, 73, 0.972) 74%
-    // );
     padding: 1.5rem;
-    // margin-top: 1rem;
     border-radius: 1.5rem;
     cursor: pointer;
     &:before {
