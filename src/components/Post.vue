@@ -430,7 +430,7 @@ export default {
     setInterval() {
       setInterval(() => {
         this.currentTime = new Date().toLocaleTimeString();
-      }, 60000);
+      }, 30000);
     },
   },
   mounted() {

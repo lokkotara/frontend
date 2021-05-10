@@ -339,7 +339,6 @@ export default {
         .get(`http://localhost:3000/api/auth/profil`, config)
         .then((res) => {
           this.users = res.data;
-          console.log(this.users);
         })
         .catch((error) => {
           console.log({ error });
