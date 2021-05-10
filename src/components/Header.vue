@@ -1,8 +1,16 @@
 <template>
   <header class="mainHeader">
-    <router-link to="/feed"
-      ><img src="@/assets/logoLong-alt.png" class="logoLong" alt="" />
-      <img src="@/assets/logo.png" class="logoShort" alt="" />
+    <router-link to="/Feed"
+      ><img
+        src="@/assets/logoLong-alt.png"
+        class="logoLong"
+        alt="Logo de l'entreprise avec écriture"
+      />
+      <img
+        src="@/assets/logo.png"
+        class="logoShort"
+        alt="Logo de l'entreprise sans écriture"
+      />
     </router-link>
     <div class="profileBtn">
       <span class="pseudo">{{ username }}</span>

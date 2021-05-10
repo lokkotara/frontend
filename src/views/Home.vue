@@ -18,4 +18,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.mainWrapper {
+  background-color: var(--Primary-Color);
+}
+</style>

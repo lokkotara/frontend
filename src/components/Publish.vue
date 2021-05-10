@@ -1,5 +1,6 @@
 <template>
   <div class="publish">
+    <h1 class="title">Publiez du contenu</h1>
     <div class="optionWrapper">
       <span class="fas fa-paragraph" @click="getContent">Texte</span>
       <span class="fas fa-paperclip" @click="getImage">Image</span>
@@ -109,6 +110,11 @@ export default {
   flex-direction: column;
   border-radius: 25px;
   padding: 0.5rem;
+  .title {
+    color: var(--Light-Color);
+    text-align: center;
+    padding: 1rem;
+  }
   .optionWrapper {
     display: flex;
     justify-content: space-around;

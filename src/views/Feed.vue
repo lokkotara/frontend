@@ -6,7 +6,10 @@
       <!-- <h1>Fil d'actualité</h1> -->
       <p class="defaultText" v-if="allPosts.length === 0">
         Vous n'avez encore aucun contenu dans le fil d'actualité.
-        <img src="@/assets/defaultContent.jpg" alt="" />
+        <img
+          src="@/assets/defaultContent.jpg"
+          alt="Photo de profil du créateur de la publication"
+        />
       </p>
       <article class="postArticle" v-for="post in allPosts" :key="post.id">
         <Post

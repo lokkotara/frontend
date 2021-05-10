@@ -102,7 +102,7 @@ h1 {
   font-size: 3.5rem;
   font-family: "Karla", sans-serif;
   font-weight: 900;
-  padding: 5rem 0 2rem;
+  padding: 2rem;
 }
 
 h2 {

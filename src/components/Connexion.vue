@@ -15,6 +15,7 @@
           <input
             type="text"
             @input="checkLUsername"
+            @keyup.enter="login"
             v-model="lUsername"
             id="lUsername"
             placeholder="Votre nom d'utilisateur"
@@ -29,6 +30,7 @@
           <input
             type="email"
             @input="checkLEmail"
+            @keyup.enter="login"
             v-model="lEmail"
             id="lEmail"
             placeholder="Votre adresse mail"
@@ -46,6 +48,7 @@
           <input
             v-model="lPassword"
             @input="checkLPassword"
+            @keyup.enter="login"
             :type="type"
             id="lPassword"
             pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*"
@@ -71,6 +74,7 @@
           <input
             type="text"
             @input="checkRUsername"
+            @keyup.enter="signup"
             v-model="rUsername"
             id="rUsername"
             placeholder="Votre nom d'utilisateur"
@@ -85,6 +89,7 @@
           <input
             type="email"
             @input="checkREmail"
+            @keyup.enter="signup"
             v-model="rEmail"
             id="rEmail"
             placeholder="Votre adresse mail"
@@ -102,6 +107,7 @@
           <input
             v-model="rPassword"
             @input="checkRPassword"
+            @keyup.enter="signup"
             :type="type"
             id="rPassword"
             pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*"

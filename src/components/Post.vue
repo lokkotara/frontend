@@ -10,7 +10,7 @@
         >
           <img
             :src="post.User.image === null ? avatar : post.User.image"
-            alt=""
+            alt="Image du profil du créateur de la publication"
           />
         </router-link>
         <div class="subInfos">
@@ -79,7 +79,7 @@
             >
               <img
                 :src="comment.User.image === null ? avatar : comment.User.image"
-                alt=""
+                alt="Photo de profil du créateur du commentaire"
               />
             </router-link>
             <span class="comment">
@@ -528,7 +528,7 @@ footer {
   .numbers {
     cursor: pointer;
     display: flex;
-    background-color: #d6bcbc;
+    background-color: var(--Primary-Color);
     background-image: linear-gradient(
       315deg,
       #4f6791 0%,

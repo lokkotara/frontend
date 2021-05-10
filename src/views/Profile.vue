@@ -4,7 +4,7 @@
     <main class="mainProfile">
       <div class="profile">
         <div class="leftPartProfile">
-          <p class="title">Modification</p>
+          <h2 class="title">Modification</h2>
           <span class="inputWrapper">
             <span class="btn inputBtn" @click="getUsername">Pseudonyme</span>
             <span class="newContent"
@@ -54,6 +54,7 @@
             ref="fileInput"
             accept="image/jpeg, image/jpg, image/png,"
             @change="onFilePicked"
+            aria-label="Chargement de la photo de profil"
           />
           <span class="imgContent"
             >{{ newImage !== null ? newImage.name : emptyMessage
@@ -65,7 +66,7 @@
           ></span>
         </div>
         <div class="rightPartProfile">
-          <p class="title">Actions</p>
+          <h2 class="title">Actions</h2>
           <span class="fas fa-cog inputBtn" @click="changePassword"
             >Nouveau mot de passe
           </span>
@@ -75,23 +76,26 @@
           <span class="btn fas fa-trash-alt inputBtn" @click="deleteProfileUser"
             >Supprimer le compte</span
           >
-          <span v-if="isAdmin" class="btn deleteUser">
-            <select class="select" v-model="selected">
-              <option disabled value="">
-                Sélectionner le compte à supprimer
-              </option>
-              <option
-                :value="{ id: user.id }"
-                v-for="user in users"
-                :key="user.id"
+          <div class="adminWrapper" v-if="isAdmin">
+            <h2 id="AdminTitle" class="title">Zone administrateur</h2>
+            <span class="deleteUser">
+              <select class="select" v-model="selected">
+                <option disabled value="">
+                  Sélectionner le compte à supprimer
+                </option>
+                <option
+                  :value="{ id: user.id }"
+                  v-for="user in users"
+                  :key="user.id"
+                >
+                  {{ user.username }}
+                </option>
+              </select>
+              <span class="deleteBtn" @click="deleteSelectedUser(selected.id)"
+                >Supprimer</span
               >
-                {{ user.username }}
-              </option>
-            </select>
-            <span class="deleteBtn" @click="deleteSelectedUser(selected.id)"
-              >Supprimer</span
-            >
-          </span>
+            </span>
+          </div>
         </div>
       </div>
     </main>
@@ -523,6 +527,7 @@ export default {
         #4f6791 0%,
         rgba(35, 49, 73, 0.972) 74%
       );
+      background-color: rgba(35, 49, 73, 0.972);
       border: none;
       padding: 1.5rem;
       font-size: 2rem;
@@ -589,6 +594,22 @@ export default {
     object-fit: cover;
     margin-bottom: 1.5rem;
   }
+  .adminWrapper {
+    border: 2px solid #d6646c;
+    background-image: linear-gradient(
+      315deg,
+      #4f6791 0%,
+      rgba(35, 49, 73, 0.972) 74%
+    );
+    padding: 0.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    #AdminTitle {
+      color: var(--Light-Color);
+    }
+  }
   .deleteUser {
     display: flex;
     .select {
@@ -600,6 +621,7 @@ export default {
       color: var(--Light-Color);
       background-color: var(--Secondary-Color-Alt);
       border-radius: 0.5rem;
+      cursor: pointer;
     }
   }
 }

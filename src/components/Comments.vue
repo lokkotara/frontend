@@ -6,6 +6,7 @@
       v-model="comment"
       type="text"
       placeholder="Votre commentaire..."
+      aria-label="Champ pour poster un commentaire"
     />
     <span @click="sendComment" class="fas fa-chevron-right validate"></span>
   </div>

@@ -3,6 +3,7 @@
     <Header />
     <main class="mainProfile">
       <div class="profile">
+        <h1>Profil utilisateur</h1>
         <img :src="image" alt="" class="imgProfile" />
         <p class="membership">
           Membre depuis le {{ moment(createdAt).format("DD MMMM YYYY") }}
@@ -15,17 +16,12 @@
           <span class="profileTitle">Biographie</span>
           <span class="profileContent">{{ bio }}</span>
         </p>
-        <span
-          v-if="isAdmin"
-          class="btn fas fa-trash-alt inputBtn"
-          @click="deleteProfileUser"
-          >Supprimer le compte</span
-        >
+        <div v-if="isAdmin" class="adminWrapper">
+          <span class="btn fas fa-trash-alt inputBtn" @click="deleteProfileUser"
+            >Supprimer le compte</span
+          >
+        </div>
       </div>
-      <!-- <div class="actions">
-        <span>Ajouter ce profil à mes favoris</span>
-        <span class="fas fa-star"></span>
-      </div> -->
     </main>
   </div>
 </template>
@@ -144,7 +140,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 100vh;
   .profile {
     display: flex;
     flex-direction: column;
@@ -156,47 +151,48 @@ export default {
     background-color: var(--Light-Color);
     width: 100%;
     height: 90%;
+    h1 {
+      text-align: center;
+    }
     p {
       width: 80%;
       display: flex;
+      flex-direction: column;
     }
     .membership {
-      justify-content: center;
+      text-align: center;
     }
     .profileTitle {
       background-color: var(--Primary-Color);
       color: var(--Light-Color);
       padding: 1.5rem;
-      border-radius: 1rem 0 0 1rem;
-      width: 15rem;
+      border-radius: 1rem 1rem 0 0;
+      text-align: center;
       white-space: nowrap;
+      font-weight: bold;
     }
     .profileContent {
-      border-radius: 0 1rem 1rem 0;
+      border-radius: 0 0 1rem 1rem;
       padding: 1.5rem;
-      background-color: var(--Secondary-Color-Alt);
-      color: var(--Light-Color);
+      background-color: #ce444e;
+      color: white;
       flex: 1;
       text-align: center;
     }
   }
   .fa-trash-alt {
-    color: var(--Secondary-Color-Alt);
-    background-image: linear-gradient(
-      315deg,
-      #4f6791 0%,
-      rgba(35, 49, 73, 0.972) 74%
-    );
+    color: var(--Light-Color);
+    // background-image: linear-gradient(
+    //   315deg,
+    //   #4f6791 0%,
+    //   rgba(35, 49, 73, 0.972) 74%
+    // );
     padding: 1.5rem;
+    // margin-top: 1rem;
     border-radius: 1.5rem;
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    &:hover {
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-        0 10px 10px rgba(0, 0, 0, 0.22);
-    }
     &:before {
+      color: var(--Secondary-Color-Alt);
       padding: 1rem;
     }
   }
@@ -234,7 +230,24 @@ export default {
       color: #d6bcbc;
     }
   }
+  .adminWrapper {
+    border: 2px solid #d6646c;
+    background-image: linear-gradient(
+      315deg,
+      #4f6791 0%,
+      rgba(35, 49, 73, 0.972) 74%
+    );
+    padding: 0.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    &:hover {
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+        0 10px 10px rgba(0, 0, 0, 0.22);
+    }
+  }
 }
 </style>
-
-function newFunction(token) { return `Bearer: ${token}`; }
