@@ -35,7 +35,6 @@ export default {
         confirmButtonText: "Ajouter le texte",
       });
       if (contentPost) {
-        console.log("contentPost : " + contentPost);
         this.message = contentPost;
       }
     },

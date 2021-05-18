@@ -268,7 +268,6 @@ export default {
       await axios
         .post("http://localhost:3000/api/auth/login", User)
         .then((res) => {
-          console.log(res.status);
           if (res.status === 200) {
             sessionStorage.setItem("user", JSON.stringify(res.data));
             this.$router.push("/feed");

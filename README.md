@@ -9,3 +9,6 @@ Voici la partie frontend de l'application sur laquelle j'ai été libre de chois
 
 ## Installation du front-end
 Après avoir cloné le repository, Il vous faudra installer les packages avec `npm install`.
+
+## Lancement du front-end
+Une fois le repository cloné et ses dépendances installées, vous pouvez lancer le serveur avec la commande `npx vue-cli-service serve`
