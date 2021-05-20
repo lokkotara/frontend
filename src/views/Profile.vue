@@ -44,7 +44,7 @@
           <p class="membership">
             Membre depuis le {{ moment(createdAt).format("DD MMM YYYY") }}
           </p>
-          <img :src="image" alt="" class="imgProfile" />
+          <img :src="tempImg ? tempImg : image" alt="" class="imgProfile" />
           <button class="btn btn-info" @click="getImage">
             Modifier son image
           </button>
@@ -126,6 +126,7 @@ export default {
       id: "",
       image: avatar,
       newImage: null,
+      tempImg: null,
       username: "",
       newUsername: null,
       email: "",
@@ -143,7 +144,7 @@ export default {
       const { value: username } = await this.$swal.fire({
         title: "Changer de pseudonyme",
         input: "text",
-        inputLabel: "Pseudo actuel : " + this.username,
+        inputValue: this.username,
         inputPlaceholder: "Entrer votre nouveau pseudo",
       });
       if (username) {
@@ -154,7 +155,7 @@ export default {
       const { value: email } = await this.$swal.fire({
         title: "Changer d'adresse mail",
         input: "email",
-        inputLabel: "Email actuel : " + this.email,
+        inputValue: this.email,
         inputPlaceholder: "Entrer votre nouvelle adresse",
       });
       if (email) {
@@ -165,7 +166,7 @@ export default {
       const { value: bio } = await this.$swal.fire({
         title: "Changer votre bio",
         input: "textarea",
-        inputLabel: "Bio actuel : " + this.bio,
+        inputValue: this.bio,
         inputPlaceholder: "Entrer votre nouvelle biographie",
       });
       if (bio) {
@@ -178,17 +179,18 @@ export default {
         input: "file",
         inputAttributes: {
           accept: "image/*",
-          "aria-label": "Upload your profile picture",
+          "aria-label": "Charger une nouvelle image",
         },
       });
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.$swal.fire({
-            title: "Votre nouvel avatar",
-            imageUrl: e.target.result,
-            imageAlt: "L'image uploadé",
-          });
+          // this.$swal.fire({
+          //   title: "Votre nouvel avatar",
+          //   imageUrl: e.target.result,
+          //   imageAlt: "L'image uploadé",
+          // });
+          this.tempImg = e.target.result;
         };
         reader.readAsDataURL(file);
         this.newImage = file;
