@@ -173,7 +173,7 @@ export default {
             .fire({
               title: "Changer le contenu",
               input: "textarea",
-              inputPlaceholder: "Modifiez votre post ici",
+              inputValue: await this.post.content,
               showCloseButton: true,
               showDenyButton: true,
               returnInputValueOnDeny: true,
