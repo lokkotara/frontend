@@ -1,9 +1,10 @@
 <template>
-  <router-view />
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
 <style lang="scss">
-@import "~@sweetalert2/theme-borderless/borderless.scss";
 @import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700;800&family=Raleway:ital,wght@0,300;0,400;1,400&display=swap");
 :root {
   --Primary-Color: #091f43;

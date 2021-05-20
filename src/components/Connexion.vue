@@ -122,10 +122,11 @@
           <span v-if="!isCorrect" class="errorMsg">{{ rErrorMsg }}</span>
           <input
             id="submitBtn"
-            type="submit"
+            type="button"
             @click="signup"
             value="S'inscrire"
           />
+          <span class="errorMsg">{{ message }}</span>
         </template>
       </form>
     </div>
@@ -137,6 +138,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      message: "",
       error: "",
       onLogin: true,
       lUserError: false,
@@ -256,7 +258,7 @@ export default {
           }
         })
         .catch((e) => {
-          console.error("erreur : " + e);
+          this.message = e.response.data.error;
         });
     },
     async login() {

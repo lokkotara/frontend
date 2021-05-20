@@ -344,7 +344,6 @@ export default {
         });
     },
     deleteSelectedUser() {
-      console.log("Je supprime : " + this.selected.id);
       this.user = JSON.parse(sessionStorage.getItem("user"));
       let token = this.user.token;
       let userId = this.selected.id;
@@ -378,9 +377,6 @@ export default {
             axios
               .delete(`http://localhost:3000/api/auth/profil/${userId}`, config)
               .then(() => {
-                console.log(
-                  "l'utilisateur numéro " + userId + " a été supprimé !"
-                );
                 this.getAllUsers();
               })
               .catch((error) => {
