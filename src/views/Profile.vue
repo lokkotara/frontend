@@ -61,7 +61,7 @@
             }}<i
               class="fas fa-times-circle"
               v-if="newImage !== null"
-              @click="newImage = null"
+              @click="reset"
             ></i
           ></span>
         </div>
@@ -140,6 +140,10 @@ export default {
     };
   },
   methods: {
+    reset() {
+      this.newImage = null;
+      this.tempImg = null;
+    },
     async getUsername() {
       const { value: username } = await this.$swal.fire({
         title: "Changer de pseudonyme",
@@ -222,12 +226,12 @@ export default {
                 }).then((res) => {
                   if (res.value) {
                     this.newPassword = res.value;
-                    let update = new FormData();
-                    update.append("password", this.newPassword);
+                    let update = {
+                      password: this.newPassword,
+                    };
                     let config = {
                       headers: {
                         authorization: "Bearer: " + this.token,
-                        "Content-Type": "application/form-data",
                       },
                     };
                     let id = this.user.userId;
