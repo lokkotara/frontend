@@ -28,9 +28,9 @@ export default {
   methods: {
     async getContent() {
       const { value: contentPost } = await this.$swal.fire({
-        title: "Charger le contenu",
+        title: "Que voulez-vous dire ?",
         input: "textarea",
-        inputPlaceholder: "Modifiez votre post ici",
+        inputPlaceholder: "Écrivez votre post ici",
         showCloseButton: true,
         confirmButtonText: "Ajouter le texte",
       });
@@ -44,7 +44,7 @@ export default {
         input: "file",
         inputAttributes: {
           accept: "image/jpg, image/jpeg, image/png",
-          "aria-label": "Upload your profile picture",
+          "aria-label": "Charger une photo de profil",
         },
       });
       if (imagePost) {
@@ -72,23 +72,22 @@ export default {
           "Content-Type": "application/form-data",
         },
       };
-      await axios
-        .post(`http://localhost:3000/api/feed/`, newPost, config)
-        .then((res) => {
-          if (res.status === 201) {
-            console.log("Post envoyé");
-          }
-        })
-        .then(() => {
-          this.$emit("get-all-posts");
-        })
-        .then(() => {
-          this.message = null;
-          this.newImage = null;
-        })
-        .catch((e) => {
-          console.error("erreur : " + e);
-        });
+      if (this.message !== null || this.newImage !== null) {
+        await axios
+          .post(`http://localhost:3000/api/feed/`, newPost, config)
+          .then((res) => {
+            if (res.status === 201) {
+              this.$emit("get-all-posts");
+            }
+          })
+          .then(() => {
+            this.message = null;
+            this.newImage = null;
+          })
+          .catch((e) => {
+            console.error("erreur : " + e);
+          });
+      }
     },
   },
 };
