@@ -9,291 +9,31 @@
       </div>
     </header>
     <div id="displayForm">
-      <form class="form">
-        <template id="connexion" v-if="this.onLogin == true">
-          <label for="lUsername"> Pseudonyme</label>
-          <input
-            type="text"
-            @input="checkLUsername"
-            @keyup.enter="login"
-            v-model="lUsername"
-            id="lUsername"
-            placeholder="Votre nom d'utilisateur"
-            pattern="^[a-zA-Z]{1}[a-zA-Z'À-ÿ -]+$"
-            :class="isLUserValid ? isLUserValid : null"
-            required
-          />
-          <span v-if="lUserError" class="errorMsg"
-            >Le nom d'utilisateur n'a pas le bon format</span
-          >
-          <label for="lEmail"> Adresse e-mail</label>
-          <input
-            type="email"
-            @input="checkLEmail"
-            @keyup.enter="login"
-            v-model="lEmail"
-            id="lEmail"
-            placeholder="Votre adresse mail"
-            pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([_\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})"
-            :class="isLEmailValid ? isLEmailValid : null"
-            required
-          />
-          <span v-if="lEmailError" class="errorMsg"
-            >L'adresse mail n'a pas le bon format</span
-          >
-          <span>
-            <label for="lPassword"> Mot de passe</label
-            ><i :class="isMasked" @click="maskPassword"></i>
-          </span>
-          <input
-            v-model="lPassword"
-            @input="checkLPassword"
-            @keyup.enter="login"
-            :type="type"
-            id="lPassword"
-            pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*"
-            placeholder="Votre mot de passe"
-            :class="isLPasswordValid ? isLPasswordValid : null"
-            required
-          />
-          <span v-if="lPasswordError" class="errorMsg"
-            >Le mot de passe n'a pas le bon format</span
-          >
-          <input
-            id="submitBtn"
-            type="button"
-            @click="login"
-            value="Se connecter"
-          />
-          <span v-if="!isCorrect" class="errorMsg">
-            {{ error.error }}{{ lErrorMsg }}</span
-          >
-        </template>
-        <template id="inscription" v-else>
-          <label for="username"> Pseudonyme </label>
-          <input
-            type="text"
-            @input="checkRUsername"
-            @keyup.enter="signup"
-            v-model="rUsername"
-            id="rUsername"
-            placeholder="Votre nom d'utilisateur"
-            pattern="^[a-zA-Z]{1}[a-zA-Z'À-ÿ -]+$"
-            :class="isRUserValid ? isRUserValid : null"
-            required
-          />
-          <span v-if="rUserError" class="errorMsg"
-            >Ne doit contenir que des lettres et être unique</span
-          >
-          <label for="email"> Adresse e-mail</label>
-          <input
-            type="email"
-            @input="checkREmail"
-            @keyup.enter="signup"
-            v-model="rEmail"
-            id="rEmail"
-            placeholder="Votre adresse mail"
-            pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([_\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})"
-            :class="isREmailValid ? isREmailValid : null"
-            required
-          />
-          <span v-if="rEmailError" class="errorMsg"
-            >Doit respecter le format email et être unique</span
-          >
-          <span>
-            <label for="password"> Mot de passe</label
-            ><i :class="isMasked" @click="maskPassword"></i>
-          </span>
-          <input
-            v-model="rPassword"
-            @input="checkRPassword"
-            @keyup.enter="signup"
-            :type="type"
-            id="rPassword"
-            pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*"
-            placeholder="Votre mot de passe"
-            :class="isRPasswordValid ? isRPasswordValid : null"
-            required
-          />
-          <span v-if="rPasswordError" class="errorMsg"
-            >Doit contenir au moins 8 caractères, dont un chiffre, une majuscule
-            et une minuscule</span
-          >
-          <span v-if="!isCorrect" class="errorMsg">{{ rErrorMsg }}</span>
-          <input
-            id="submitBtn"
-            type="button"
-            @click="signup"
-            value="S'inscrire"
-          />
-          <span class="errorMsg">{{ message }}</span>
-        </template>
-      </form>
+      <Login v-if="this.onLogin == true" />
+      <Signup v-else />
     </div>
   </section>
 </template>
 
 <script>
-import axios from "axios";
+import Signup from "../components/Signup.vue";
+import Login from "../components/Login.vue";
 export default {
+  components: {
+    Signup,
+    Login,
+  },
   data() {
     return {
-      message: "",
-      error: "",
       onLogin: true,
-      lUserError: false,
-      lEmailError: false,
-      lPasswordError: false,
-      rUsername: "",
-      lUsername: "",
-      rEmail: "",
-      lEmail: "",
-      rPassword: "",
-      lPassword: "",
-      image: "",
-      type: "password",
-      isMasked: "fas fa-eye",
-      isValid: null,
-      isRUserValid: null,
-      isLUserValid: null,
-      isLEmailValid: null,
-      isREmailValid: null,
-      isLPasswordValid: null,
-      isRPasswordValid: null,
-      isCorrect: true,
-      lErrorMsg: "",
-      rErrorMsg: "",
     };
   },
   methods: {
-    checkLUsername() {
-      let lUsername = document.getElementById("lUsername");
-      if (lUsername.validity.valid) {
-        this.lUserError = false;
-        this.isLUserValid = "valid";
-      } else {
-        this.lUserError = true;
-        this.isLUserValid = "invalid";
-      }
-    },
-    checkRUsername() {
-      let rUsername = document.getElementById("rUsername");
-      if (rUsername.validity.valid) {
-        this.rUserError = false;
-        this.isRUserValid = "valid";
-      } else {
-        this.rUserError = true;
-        this.isRUserValid = "invalid";
-      }
-    },
-    checkLEmail() {
-      let lEmail = document.getElementById("lEmail");
-      if (lEmail.validity.valid) {
-        this.lEmailError = false;
-        this.isLEmailValid = "valid";
-      } else {
-        this.lEmailError = true;
-        this.isLEmailValid = "invalid";
-      }
-    },
-    checkREmail() {
-      let rEmail = document.getElementById("rEmail");
-      if (rEmail.validity.valid) {
-        this.rEmailError = false;
-        this.isREmailValid = "valid";
-      } else {
-        this.rEmailError = true;
-        this.isREmailValid = "invalid";
-      }
-    },
-    checkLPassword() {
-      let lPassword = document.getElementById("lPassword");
-      if (lPassword.validity.valid) {
-        this.lPasswordError = false;
-        this.isLPasswordValid = "valid";
-      } else {
-        this.lPasswordError = true;
-        this.isLPasswordValid = "invalid";
-      }
-    },
-    checkRPassword() {
-      let rPassword = document.getElementById("rPassword");
-      if (rPassword.validity.valid) {
-        this.rPasswordError = false;
-        this.isRPasswordValid = "valid";
-      } else {
-        this.rPasswordError = true;
-        this.isRPasswordValid = "invalid";
-      }
-    },
-    maskPassword() {
-      if (this.type === "password") {
-        this.type = "text";
-        this.isMasked = "fas fa-eye-slash";
-      } else {
-        this.type = "password";
-        this.isMasked = "fas fa-eye";
-      }
-    },
     showLogin() {
       return (this.onLogin = true);
     },
     showSignup() {
       return (this.onLogin = false);
-    },
-    async signup() {
-      let newUser = {
-        username: this.rUsername,
-        email: this.rEmail,
-        password: this.rPassword,
-      };
-      await axios
-        .post("http://localhost:3000/api/auth/signup", newUser)
-        .then((res) => {
-          if (res.status === 201) {
-            this.lUsername = this.rUsername;
-            this.lEmail = this.rEmail;
-            this.lPassword = this.rPassword;
-            this.login();
-          }
-        })
-        .catch((e) => {
-          this.message = e.response.data.error;
-        });
-    },
-    async login() {
-      let User = {
-        username: this.lUsername,
-        email: this.lEmail,
-        password: this.lPassword,
-      };
-      await axios
-        .post("http://localhost:3000/api/auth/login", User)
-        .then((res) => {
-          if (res.status === 200) {
-            sessionStorage.setItem("user", JSON.stringify(res.data));
-            this.$router.push("/feed");
-            this.$swal.fire({
-              toast: true,
-              position: "top-end",
-              title: "Connecté !",
-              text: "Bienvenue",
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          }
-        })
-        .catch((e) => {
-          this.error = e.response.data;
-          if (e.response.status === 401) {
-            this.isCorrect = false;
-            this.lErrorMsg = " Veuillez vérifiez vos identifiants";
-          } else {
-            this.isCorrect = false;
-            this.lErrorMsg = "";
-          }
-        });
     },
   },
 };

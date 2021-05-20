@@ -1,10 +1,10 @@
 <template>
   <form class="form">
-    <label for="username"> Pseudonyme </label>
+    <label for="lUsername"> Pseudonyme</label>
     <input
       type="text"
       @input="checkUsername"
-      @keyup.enter="signup"
+      @keyup.enter="login"
       v-model="username"
       id="username"
       placeholder="Votre nom d'utilisateur"
@@ -13,13 +13,13 @@
       required
     />
     <span v-if="userError" class="errorMsg"
-      >Ne doit contenir que des lettres et être unique</span
+      >Le nom d'utilisateur n'a pas le bon format</span
     >
-    <label for="email"> Adresse e-mail</label>
+    <label for="Email"> Adresse e-mail</label>
     <input
       type="email"
       @input="checkEmail"
-      @keyup.enter="signup"
+      @keyup.enter="login"
       v-model="email"
       id="email"
       placeholder="Votre adresse mail"
@@ -28,7 +28,7 @@
       required
     />
     <span v-if="emailError" class="errorMsg"
-      >Doit respecter le format email et être unique</span
+      >L'adresse mail n'a pas le bon format</span
     >
     <span>
       <label for="password"> Mot de passe</label
@@ -37,7 +37,7 @@
     <input
       v-model="password"
       @input="checkPassword"
-      @keyup.enter="signup"
+      @keyup.enter="login"
       :type="type"
       id="password"
       pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*"
@@ -46,19 +46,19 @@
       required
     />
     <span v-if="passwordError" class="errorMsg"
-      >Doit contenir au moins 8 caractères, dont un chiffre, une majuscule et
-      une minuscule</span
+      >Le mot de passe n'a pas le bon format</span
     >
-    <span v-if="!isCorrect" class="errorMsg">{{ errorMsg }}</span>
-    <input id="submitBtn" type="button" @click="signup" value="S'inscrire" />
-    <span class="errorMsg">{{ message }}</span>
+    <input id="submitBtn" type="button" @click="login" value="Se connecter" />
+    <span v-if="!isCorrect" class="errorMsg">
+      {{ error.error }}{{ errorMsg }}</span
+    >
   </form>
 </template>
 
 <script>
 import axios from "axios";
 export default {
-  name: "Signup",
+  name: "Login",
   data() {
     return {
       message: "",
@@ -110,23 +110,6 @@ export default {
         this.passwordError = true;
         this.isPasswordValid = "invalid";
       }
-    },
-    async signup() {
-      let newUser = {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      };
-      await axios
-        .post("http://localhost:3000/api/auth/signup", newUser)
-        .then((res) => {
-          if (res.status === 201) {
-            this.login();
-          }
-        })
-        .catch((e) => {
-          this.message = e.response.data.error;
-        });
     },
     async login() {
       let User = {
