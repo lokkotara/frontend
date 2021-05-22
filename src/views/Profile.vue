@@ -44,7 +44,11 @@
           <p class="membership">
             Membre depuis le {{ moment(createdAt).format("DD MMM YYYY") }}
           </p>
-          <img :src="tempImg ? tempImg : image" alt="" class="imgProfile" />
+          <img
+            :src="tempImg ? tempImg : image"
+            alt="Nouvelle image à changer"
+            class="imgProfile"
+          />
           <button class="btn btn-info" @click="getImage">
             Modifier son image
           </button>
@@ -189,11 +193,6 @@ export default {
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          // this.$swal.fire({
-          //   title: "Votre nouvel avatar",
-          //   imageUrl: e.target.result,
-          //   imageAlt: "L'image uploadé",
-          // });
           this.tempImg = e.target.result;
         };
         reader.readAsDataURL(file);

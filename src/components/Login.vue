@@ -1,6 +1,6 @@
 <template>
   <form class="form">
-    <label for="lUsername"> Pseudonyme</label>
+    <label for="username"> Pseudonyme</label>
     <input
       type="text"
       @input="checkUsername"
@@ -15,7 +15,7 @@
     <span v-if="userError" class="errorMsg"
       >Le nom d'utilisateur n'a pas le bon format</span
     >
-    <label for="Email"> Adresse e-mail</label>
+    <label for="email"> Adresse e-mail</label>
     <input
       type="email"
       @input="checkEmail"
