@@ -69,7 +69,15 @@ export default {
       type: "password",
       isMasked: "fas fa-eye",
       isValid: null,
+      userError: null,
+      emailError: null,
+      passwordError: null,
     };
+  },
+  computed: {
+    checkErrors() {
+      return this.userError + this.emailError + this.passwordError;
+    },
   },
   methods: {
     maskPassword() {
@@ -112,21 +120,26 @@ export default {
       }
     },
     async signup() {
-      let newUser = {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      };
-      await axios
-        .post("http://localhost:3000/api/auth/signup", newUser)
-        .then((res) => {
-          if (res.status === 201) {
-            this.login();
-          }
-        })
-        .catch((e) => {
-          this.message = e.response.data.error;
-        });
+      if (this.checkErrors === 0) {
+        let newUser = {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        };
+        await axios
+          .post("http://localhost:3000/api/auth/signup", newUser)
+          .then((res) => {
+            if (res.status === 201) {
+              this.login();
+            }
+          })
+          .catch((e) => {
+            this.message = e.response.data.error;
+          });
+      } else {
+        this.message =
+          "Au moins un des champs ne correspond pas au format demandé.";
+      }
     },
     async login() {
       let User = {
