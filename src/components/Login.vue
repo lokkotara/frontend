@@ -69,15 +69,7 @@ export default {
       type: "password",
       isMasked: "fas fa-eye",
       isValid: null,
-      userError: null,
-      emailError: null,
-      passwordError: null,
     };
-  },
-  computed: {
-    checkErrors() {
-      return this.userError + this.emailError + this.passwordError;
-    },
   },
   methods: {
     maskPassword() {
@@ -120,40 +112,38 @@ export default {
       }
     },
     async login() {
-      if (this.checkErrors === 0) {
-        let User = {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-        };
-        await axios
-          .post("http://localhost:3000/api/auth/login", User)
-          .then((res) => {
-            if (res.status === 200) {
-              sessionStorage.setItem("user", JSON.stringify(res.data));
-              this.$router.push("/feed");
-              this.$swal.fire({
-                toast: true,
-                position: "top-end",
-                title: "Connecté !",
-                text: "Bienvenue",
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500,
-              });
-            }
-          })
-          .catch((e) => {
-            this.error = e.response.data;
-            if (e.response.status === 401) {
-              this.isCorrect = false;
-              this.errorMsg = " Veuillez vérifiez vos identifiants";
-            } else {
-              this.isCorrect = false;
-              this.errorMsg = "";
-            }
-          });
-      }
+      let User = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      };
+      await axios
+        .post("http://localhost:3000/api/auth/login", User)
+        .then((res) => {
+          if (res.status === 200) {
+            sessionStorage.setItem("user", JSON.stringify(res.data));
+            this.$router.push("/feed");
+            this.$swal.fire({
+              toast: true,
+              position: "top-end",
+              title: "Connecté !",
+              text: "Bienvenue",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        })
+        .catch((e) => {
+          this.error = e.response.data;
+          if (e.response.status === 401) {
+            this.isCorrect = false;
+            this.errorMsg = " Veuillez vérifiez vos identifiants";
+          } else {
+            this.isCorrect = false;
+            this.errorMsg = "";
+          }
+        });
     },
   },
 };
